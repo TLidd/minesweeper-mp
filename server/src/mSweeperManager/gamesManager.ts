@@ -11,6 +11,10 @@ class gameManager {
         delete this.gameList[gameID];
     }
 
+    public getBoard(gameID: string): Array<Array<number>> {
+        return this.gameList[gameID].getRevealBoard();
+    }
+
     public getGame(gameID: string): MineSweeperGame {
         return this.gameList[gameID];
     }
