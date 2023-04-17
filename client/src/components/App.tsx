@@ -22,16 +22,26 @@ function App() {
     if (bombsRef.current.value > maxAllowed) bombsRef.current.value = maxAllowed;
   }
 
-  const gameCreate = async (e: React.MouseEvent) => {
-    await fetch(`/createGame?boardSize=${boardRef.current.value}&numOfBombs=${bombsRef.current.value}&gameID=${socket.id}`);
-    navigate(`./game/${socket.id}`);
+  const gameCreate = (e: React.MouseEvent) => {
+    socket.emit('createGame', boardRef.current.value, bombsRef.current.value);
   }
 
   useEffect(() => {
+    function createdGame(gameID: string): void{
+      navigate(`./game/${gameID}`);
+    }
+
     socket.on('connect', () => {
       console.log(`Socket connected at ${socket.id}`);
     })
-  }, [])
+
+    socket.on('createdGame', createdGame)
+
+    return () => {
+      socket.off('connect');
+      socket.off('createdGame', createdGame);
+    }
+  }, [navigate])
 
   return (
     <div>

@@ -1,11 +1,11 @@
-import express, { Express, Request, Response } from 'express';
+// import express, { Express, Request, Response } from 'express';
 import { Server } from 'socket.io';
 
 import { minesweeperGamesList } from './mSweeperManager/gamesManager';
 import msMPTimed from './mSweeperManager/msMPTimed';
 
-const app: Express = express();
-const PORT = 4000;
+// const app: Express = express();
+// const PORT = 4000;
 
 const io = new Server(3001, {
     cors: {
@@ -14,6 +14,16 @@ const io = new Server(3001, {
 });
 
 io.on('connection', socket => {
+    socket.on('createGame', (boardSize: number, numOfBombs: number) => {
+        if(!minesweeperGamesList.gameExists(socket.id)){
+            let newGame = new msMPTimed(Number(boardSize), Number(numOfBombs));
+    
+            minesweeperGamesList.addGame(socket.id, newGame);
+
+            io.emit('createdGame', socket.id);
+        }
+    })
+
     socket.on('makeMove', (x: number, y: number, gameID: string) => {
         minesweeperGamesList.getGame(gameID).makeMove({x, y}, socket.id);
         io.to(gameID).emit('moveMade', minesweeperGamesList.getBoard(gameID));
@@ -44,30 +54,30 @@ io.on('connection', socket => {
 })
 
 
-app.get('/createGame', async (req: Request, res: Response) => {
-    const {gameID, boardSize, numOfBombs} = req.query;
+// app.get('/createGame', async (req: Request, res: Response) => {
+//     const {gameID, boardSize, numOfBombs} = req.query;
 
-    if(!minesweeperGamesList.gameExists(gameID.toString())){
-        // console.log("\nCreating new game...");
-        let newGame = new msMPTimed(Number(boardSize), Number(numOfBombs));
+//     if(!minesweeperGamesList.gameExists(gameID.toString())){
+//         // console.log("\nCreating new game...");
+//         let newGame = new msMPTimed(Number(boardSize), Number(numOfBombs));
 
-        minesweeperGamesList.addGame(gameID.toString(), newGame);
-        // minesweeperGamesList.displayGames();
-    }
+//         minesweeperGamesList.addGame(gameID.toString(), newGame);
+//         // minesweeperGamesList.displayGames();
+//     }
 
-    res.end();
-});
+//     res.end();
+// });
 
-app.get('/getBoard', async (req: Request, res: Response) => {
-    const {gameID} = req.query;
-    if(minesweeperGamesList.gameExists(gameID.toString())){
-        // console.log(`serving game: ${gameID}`);
-        res.json(minesweeperGamesList.getBoard(gameID.toString()));
-    } else {
-        console.log("game does not exist");
-    }
-});
+// app.get('/getBoard', async (req: Request, res: Response) => {
+//     const {gameID} = req.query;
+//     if(minesweeperGamesList.gameExists(gameID.toString())){
+//         // console.log(`serving game: ${gameID}`);
+//         res.json(minesweeperGamesList.getBoard(gameID.toString()));
+//     } else {
+//         console.log("game does not exist");
+//     }
+// });
 
-app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
-});
+// app.listen(PORT, () => {
+//     console.log(`Server listening on ${PORT}`);
+// });

@@ -28,7 +28,7 @@ export default function GameBoard() {
       }
     }
 
-    function receiveGameBoard(gameBoardInfo: { board: Array<Array<number>>, playerTurn: string }) {
+    function receiveGameBoard(gameBoardInfo: { board: Array<Array<number>>, playerTurn: string }): void {
       setGameState(gameBoardInfo.board);
       if (socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);
     }
