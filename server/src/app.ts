@@ -16,11 +16,27 @@ const io = new Server(3001, {
 io.on('connection', socket => {
     socket.on('makeMove', (x: number, y: number, id: string) => {
         minesweeperGamesList.getGame(id).revealTiles({x, y});
-        io.emit('moveMade', minesweeperGamesList.getBoard(id));
+        io.to(id).emit('moveMade', minesweeperGamesList.getBoard(id));
     })
 
-    socket.on('disconnect', () => {
-        minesweeperGamesList.deleteGame(socket.id);
+    socket.on('requestGameBoard', (gameID: string) => {
+        if(io.sockets.adapter.rooms.get(gameID).size <= 2){
+            socket.join(gameID);
+            if(minesweeperGamesList.gameExists(gameID.toString())){
+                minesweeperGamesList.getGame(gameID).setPlayer(socket.id);
+                io.to(gameID).emit('receiveGameBoard', minesweeperGamesList.getBoard(gameID.toString()));
+            } else {
+                console.log("game does not exist");
+            }
+        }else{
+            console.log("Too many players");
+        }
+    })
+
+    socket.on('disconnecting', () => {
+        for(let i of socket.rooms){
+            minesweeperGamesList.deleteGame(i);
+        }
     })
 })
 

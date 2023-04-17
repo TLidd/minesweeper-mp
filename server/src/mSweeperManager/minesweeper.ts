@@ -7,6 +7,11 @@ export default class MineSweeperGame {
     //The grid representing the board with the covered tiles.
     private coveredBoard: Array<Array<number>> = [];
 
+    private player1: string;
+    private player2: string;
+
+    private playersConnected: number;
+
     /**
      * 
      * @param length the length of the n x n grid
@@ -26,7 +31,9 @@ export default class MineSweeperGame {
     public printInfo(): void {
         let msg: string = `Game info:
         size: ${this.length} x ${this.length}
-        #ofBombs: ${this.bombs}`;
+        #ofBombs: ${this.bombs}
+        player1: ${this.player1}
+        player2: ${this.player2}`;
 
         console.log(msg);
     }
@@ -94,7 +101,29 @@ export default class MineSweeperGame {
         }
     }
 
+    /**
+     * 
+     * @returns the board that reveals the selected tiles from the client
+     */
     public getRevealBoard(): Array<Array<number>> {
         return this.coveredBoard;
+    }
+
+    /**
+     * 
+     * @param player set player1 or player2 if player1 set
+     * 
+     */
+    public setPlayer(player: string): void{
+        if(player != this.player1 && player != this.player2){
+            if(this.player1){
+                this.player2 = player;
+                this.playersConnected += 1;
+                return;
+            }
+            
+            this.player1 = player;
+            this.playersConnected += 1;
+        }
     }
 }

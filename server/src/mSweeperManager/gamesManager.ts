@@ -11,6 +11,11 @@ class gameManager {
         delete this.gameList[gameID];
     }
 
+    /**
+     * 
+     * @param gameID 
+     * @returns the game board that shows the revealed tiles.
+     */
     public getBoard(gameID: string): Array<Array<number>> {
         return this.gameList[gameID].getRevealBoard();
     }

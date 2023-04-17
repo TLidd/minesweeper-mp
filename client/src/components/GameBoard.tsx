@@ -17,24 +17,34 @@ export default function GameBoard() {
     // let abortController = new AbortController();
     // let signal = abortController.signal;
 
-    getGameState();
+    //getGameState();
 
     function moveMade(gameBoard: Array<Array<number>>){
       setGameState(gameBoard);
     }
 
+    function receiveGameBoard(board: Array<Array<number>>){
+      setGameState(board);
+    }
+
+    socket.emit('requestGameBoard', params.gameID);
+
     socket.on('moveMade', moveMade);
 
+    socket.on('receiveGameBoard', receiveGameBoard);
+
     return () => {
-      socket.off('moveMade', moveMade)
+      socket.off('moveMade', moveMade);
+      socket.off('receiveGameBoard', receiveGameBoard);
+      socket.off('requestGameBoard');
     }
   }, [])
 
-  const getGameState = async (signal?: AbortSignal) => {
-    const res = await fetch(`/getBoard?gameID=${params.gameID}`, { signal });
-    const data = await res.json();
-    setGameState(data);
-  }
+  // const getGameState = async (signal?: AbortSignal) => {
+  //   const res = await fetch(`/getBoard?gameID=${params.gameID}`, { signal });
+  //   const data = await res.json();
+  //   setGameState(data);
+  // }
 
   return (
     <div className='board'>
