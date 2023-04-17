@@ -5,6 +5,17 @@ import { socket } from '../../socket';
 import { useParams } from 'react-router-dom';
 import Player from './Player';
 
+type timers = {
+  p1: {
+      player: string;
+      timeRemaining: number
+  }
+  p2: {
+      player: string;
+      timeRemaining: number
+  }
+}
+
 export default function GameBoard() {
   let [gameState, setGameState] = useState<Array<Array<number>> | null>();
   let [currentTurn, setCurrentTurn] = useState<boolean>(false);
@@ -19,7 +30,7 @@ export default function GameBoard() {
 
   useEffect(() => {
 
-    function moveMade(gameBoardInfo: { board: Array<Array<number>>, playerTurn: string, playerLost?: string }) {
+    function moveMade(gameBoardInfo: { board: Array<Array<number>>, playerTurn: string, playerTimers: timers, playerLost?: string }) {
       setGameState(gameBoardInfo.board);
       if (gameBoardInfo.playerLost) setPlayerLost(gameBoardInfo.playerLost);
       if (socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);

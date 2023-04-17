@@ -1,14 +1,33 @@
 import msMultiplayer from "./msMultiplayer";
 
+type timers = {
+    p1: {
+        player: string;
+        timeRemaining: number
+    }
+    p2: {
+        player: string;
+        timeRemaining: number
+    }
+}
+
 export default class msMPTimed extends msMultiplayer{
     private timer1: number = 300000;
     private timer2: number = 300000;
 
     private currentTime = new Date().getTime();
 
+    /**
+     * 
+     * @param length the size of the board length x length
+     * @param bombs the number of placed bombs
+     * @param timer1 player1 timer in millis
+     * @param timer2 player2 timer in millis
+     */
     constructor(length: number, bombs: number, timer1?: number, timer2?: number){
         super(length, bombs);
         if(timer1 && timer2){
+            console.log(timer1);
             this.timer1 = timer1;
             this.timer2 = timer2;
         }
@@ -41,6 +60,21 @@ export default class msMPTimed extends msMultiplayer{
         }
 
         this.currentTime = endTime;
+    }
+
+    /**
+     * 
+     * @returns the board that reveals the selected tiles from the client
+     */
+    public getRevealBoard(): {board: Array<Array<number>>, playerTurn: string, playerTimers: timers, playerLost?: string} {
+        let playerTimes: timers = {p1: {player: this.player1, timeRemaining: this.timer1}, p2: {player: this.player2, timeRemaining: this.timer2}}
+        if(this.losingPlayer){
+            let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerTimers: playerTimes, playerLost: this.losingPlayer};
+            return boardInfo;
+        }
+        
+        let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerTimers: playerTimes};
+        return boardInfo;
     }
 
     /**
