@@ -6,11 +6,13 @@ import { useParams } from 'react-router-dom';
 
 export default function GameBoard() {
   let [gameState, setGameState] = useState<Array<Array<number>> | null>();
+  let [currentTurn, setCurrentTurn] = useState<boolean>(false);
 
   let params = useParams();
 
   const tileClickedCallback = (x: number, y: number) => {
     socket.emit('makeMove', x, y, params.gameID);
+    setCurrentTurn(false);
   }
 
   useEffect(() => {
@@ -19,12 +21,15 @@ export default function GameBoard() {
 
     //getGameState();
 
-    function moveMade(gameBoard: Array<Array<number>>){
-      setGameState(gameBoard);
+    function moveMade(gameBoardInfo: {board: Array<Array<number>>, playerTurn: string}){
+      setGameState(gameBoardInfo.board);
+      console.log(gameBoardInfo.playerTurn);
+      if(socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);
     }
 
-    function receiveGameBoard(board: Array<Array<number>>){
-      setGameState(board);
+    function receiveGameBoard(gameBoardInfo: {board: Array<Array<number>>, playerTurn: string}){
+      setGameState(gameBoardInfo.board);
+      if(socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);
     }
 
     socket.emit('requestGameBoard', params.gameID);
@@ -38,7 +43,7 @@ export default function GameBoard() {
       socket.off('receiveGameBoard', receiveGameBoard);
       socket.off('requestGameBoard');
     }
-  }, [])
+  }, [params.gameID])
 
   // const getGameState = async (signal?: AbortSignal) => {
   //   const res = await fetch(`/getBoard?gameID=${params.gameID}`, { signal });
@@ -55,7 +60,7 @@ export default function GameBoard() {
               <div className='grid' key={xIndex}>
                 {
                   x.map((tile: number, yIndex) => {
-                    return <Tile x={xIndex} y={yIndex} tileMarker={tile} clickedCallback={tileClickedCallback} key={xIndex + ' ' + yIndex} />
+                    return <Tile x={xIndex} y={yIndex} tileMarker={tile} clickedCallback={tileClickedCallback} currentTurn={currentTurn} key={xIndex + ' ' + yIndex} />
                   })
                 }
               </div>

@@ -14,22 +14,24 @@ const io = new Server(3001, {
 });
 
 io.on('connection', socket => {
-    socket.on('makeMove', (x: number, y: number, id: string) => {
-        minesweeperGamesList.getGame(id).revealTiles({x, y});
-        io.to(id).emit('moveMade', minesweeperGamesList.getBoard(id));
+    socket.on('makeMove', (x: number, y: number, gameID: string) => {
+        minesweeperGamesList.getGame(gameID).makeMove({x, y}, socket.id);
+        io.to(gameID).emit('moveMade', minesweeperGamesList.getBoard(gameID));
     })
 
     socket.on('requestGameBoard', (gameID: string) => {
-        if(io.sockets.adapter.rooms.get(gameID).size <= 2){
-            socket.join(gameID);
-            if(minesweeperGamesList.gameExists(gameID.toString())){
-                minesweeperGamesList.getGame(gameID).setPlayer(socket.id);
-                io.to(gameID).emit('receiveGameBoard', minesweeperGamesList.getBoard(gameID.toString()));
-            } else {
-                console.log("game does not exist");
+        if(io.sockets.adapter.rooms.get(gameID)){
+            if(io.sockets.adapter.rooms.get(gameID).size <= 2){
+                socket.join(gameID);
+                if(minesweeperGamesList.gameExists(gameID.toString())){
+                    minesweeperGamesList.getGame(gameID).setPlayer(socket.id);
+                    io.to(gameID).emit('receiveGameBoard', minesweeperGamesList.getBoard(gameID.toString()));
+                } else {
+                    console.log("game does not exist");
+                }
+            }else{
+                console.log("Too many players");
             }
-        }else{
-            console.log("Too many players");
         }
     })
 

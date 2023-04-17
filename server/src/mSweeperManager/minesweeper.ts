@@ -12,6 +12,8 @@ export default class MineSweeperGame {
 
     private playersConnected: number;
 
+    private playerTurn: string;
+
     /**
      * 
      * @param length the length of the n x n grid
@@ -28,12 +30,16 @@ export default class MineSweeperGame {
         this.createBoard();
     }
 
+    /**
+     * debug print
+     */
     public printInfo(): void {
         let msg: string = `Game info:
         size: ${this.length} x ${this.length}
         #ofBombs: ${this.bombs}
         player1: ${this.player1}
-        player2: ${this.player2}`;
+        player2: ${this.player2}
+        playerTurn: ${this.playerTurn}`;
 
         console.log(msg);
     }
@@ -83,12 +89,19 @@ export default class MineSweeperGame {
         }
     }
 
+    public makeMove(coordinates: { x: number, y: number }, player: string){
+        if(player == this.playerTurn) this.revealTiles({x: coordinates.x, y: coordinates.y});
+
+        if(player == this.player1) this.playerTurn = this.player2;
+        else this.playerTurn = this.player1;
+    }
+
     /**
      * 
      * @param coordinates takes in a coordinate pair to find the tile clicked
      * @returns the tile number
      */
-    public revealTiles(coordinates: { x: number, y: number }) {
+    private revealTiles(coordinates: { x: number, y: number }) {
         this.coveredBoard[coordinates.x][coordinates.y] = this.board[coordinates.x][coordinates.y];
         if (this.board[coordinates.x][coordinates.y] == 0) {
             for (let i = coordinates.x - 1; i <= coordinates.x + 1; i++) {
@@ -105,8 +118,9 @@ export default class MineSweeperGame {
      * 
      * @returns the board that reveals the selected tiles from the client
      */
-    public getRevealBoard(): Array<Array<number>> {
-        return this.coveredBoard;
+    public getRevealBoard(): {board: Array<Array<number>>, playerTurn: string} {
+        let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn}
+        return boardInfo;
     }
 
     /**
@@ -115,6 +129,8 @@ export default class MineSweeperGame {
      * 
      */
     public setPlayer(player: string): void{
+        if(!this.playerTurn) this.playerTurn = player;
+
         if(player != this.player1 && player != this.player2){
             if(this.player1){
                 this.player2 = player;

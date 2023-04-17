@@ -16,7 +16,7 @@ class gameManager {
      * @param gameID 
      * @returns the game board that shows the revealed tiles.
      */
-    public getBoard(gameID: string): Array<Array<number>> {
+    public getBoard(gameID: string): {board: Array<Array<number>>, playerTurn: string} {
         return this.gameList[gameID].getRevealBoard();
     }
 
