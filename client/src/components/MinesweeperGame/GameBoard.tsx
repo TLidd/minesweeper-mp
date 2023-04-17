@@ -1,8 +1,9 @@
 import Tile from './Tile';
 import { useEffect, useState } from 'react';
-import '../styles/GameBoard.css';
-import { socket } from '../socket';
+import '../../styles/MinesweeperGame/GameBoard.css';
+import { socket } from '../../socket';
 import { useParams } from 'react-router-dom';
+import Player from './Player';
 
 export default function GameBoard() {
   let [gameState, setGameState] = useState<Array<Array<number>> | null>();
@@ -46,28 +47,32 @@ export default function GameBoard() {
   }, [params.gameID])
 
   return (
-    <div className='board'>
-      {
-        gameState?.map((x: Array<number>, xIndex: number) => {
-          return (
-            <div className= {playerLost !== null ? 'blur-grid' : ''} key={xIndex}>
-              {
-                x.map((tile: number, yIndex) => {
-                  return <Tile x={xIndex} y={yIndex} tileMarker={tile} clickedCallback={tileClickedCallback} currentTurn={currentTurn} key={xIndex + ' ' + yIndex} />
-                })
-              }
-            </div>
-          )
-        })
-      }
-      {
-        playerLost !== null &&
-        <div className='gameFinish'>
-          {
-            socket.id === playerLost ? <b>YOU LOSE!</b> : <b>YOU WIN!</b>
-          }
-        </div>
-      }
+    <div className='minesweeper-game-mp'>
+      <Player />
+      <div className='board'>
+        {
+          gameState?.map((x: Array<number>, xIndex: number) => {
+            return (
+              <div className= {playerLost !== null ? 'blur-grid' : ''} key={xIndex}>
+                {
+                  x.map((tile: number, yIndex) => {
+                    return <Tile x={xIndex} y={yIndex} tileMarker={tile} clickedCallback={tileClickedCallback} currentTurn={currentTurn} key={xIndex + ' ' + yIndex} />
+                  })
+                }
+              </div>
+            )
+          })
+        }
+        {
+          playerLost !== null &&
+          <div className='gameFinish'>
+            {
+              socket.id === playerLost ? <b>YOU LOSE!</b> : <b>YOU WIN!</b>
+            }
+          </div>
+        }
+      </div>
+      <Player />
     </div>
   )
 }

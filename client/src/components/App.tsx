@@ -9,6 +9,8 @@ function App() {
 
   let [boardSize, setBoardSize] = useState<number>(10);
 
+  let [playerTimers, setPlayerTimers] = useState<number>(3.5);
+
   let [lowBombRange, setLowBombRange] = useState<number>(25);
   let [highBombRange, setHighBombRange] = useState<number>(25);
 
@@ -30,11 +32,16 @@ function App() {
     setBoardSize(Number(e.currentTarget.value));
   }
 
+  const setTimer = (e: React.FormEvent<HTMLInputElement>) => {
+    let time = Number(e.currentTarget.value);
+    setPlayerTimers(Number(time));
+  }
+
   const gameCreate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const randomNumber = Math.floor(Math.random() * (highBombRange - lowBombRange) + lowBombRange);
-    socket.emit('createGame', boardSize, randomNumber);
+    socket.emit('createGame', boardSize, randomNumber, playerTimers);
   }
 
   useEffect(() => {
@@ -56,17 +63,33 @@ function App() {
 
   return (
     <form className="gameSettings" onSubmit={gameCreate}>
-      <label htmlFor="boardSize">Board Size</label>
-      <input id="boardSize" type="range" min={5} max={25} defaultValue={10} onChange={setBoard} />
-      <output htmlFor='boardSize'>{boardSize}</output>
+      MINESWEEPER
+      <div>
+        <label htmlFor="boardSize">Board Size</label>
+        <input id="boardSize" type="range" min={5} max={25} defaultValue={10} onChange={setBoard} />
+        <output htmlFor='boardSize'>{`${boardSize} x ${boardSize}`}</output>
+      </div>
 
-      <label htmlFor='lowRange'>Low Range</label>
-      <input id='lowRange' type='range' min={1} max={Math.floor(Math.pow(boardSize, 2) / 2)} value={lowBombRange} onChange={setLowRange}></input>
-      <output htmlFor='lowRange'>{lowBombRange}</output>
+      <div>
+        <label htmlFor="setTimer">Timer</label>
+        <input id="setTimer" type="range" min={0.5} max={10} defaultValue={3.5} step={0.1} onChange={setTimer} />
+        <output htmlFor='setTimer'>{`${playerTimers.toFixed(1)} minutes`}</output>
+      </div>
 
-      <label htmlFor='highRange'>High Range</label>
-      <input id='highRange' type='range' min={1} max={Math.floor(Math.pow(boardSize, 2) / 2)} value={highBombRange} onChange={setHighRange}></input>
-      <output htmlFor='highRange'>{highBombRange}</output>
+      <div>
+        <div>Number of Bombs</div>
+        <div className='ranges'>
+          <label htmlFor='lowRange'>Low Range</label>
+          <input id='lowRange' type='range' min={1} max={Math.floor(Math.pow(boardSize, 2) / 2)} value={lowBombRange} onChange={setLowRange}></input>
+          <output htmlFor='lowRange'>{lowBombRange}</output>
+        </div>
+
+        <div className='ranges'>
+          <label htmlFor='highRange'>High Range</label>
+          <input id='highRange' type='range' min={1} max={Math.floor(Math.pow(boardSize, 2) / 2)} value={highBombRange} onChange={setHighRange}></input>
+          <output htmlFor='highRange'>{highBombRange}</output>
+        </div>
+      </div>
 
       <button type='submit'>Create Game</button>
     </form>

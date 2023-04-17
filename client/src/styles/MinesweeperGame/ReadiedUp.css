@@ -1,0 +1,15 @@
+.ready-box{
+    font-size: 2rem;
+}
+
+label{
+    color: white;
+}
+
+input{
+    display: block;
+    margin: 1em auto;
+
+    width: 2em;
+    height: 2em;
+}

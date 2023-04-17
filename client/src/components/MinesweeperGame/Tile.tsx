@@ -1,4 +1,4 @@
-import '../styles/Tile.css'
+import '../../styles/MinesweeperGame/Tile.css'
 import { useState } from 'react';
 
 export default function Tile({ x, y, tileMarker, currentTurn, clickedCallback }: { x: number, y: number, tileMarker: number, currentTurn: boolean, clickedCallback: (xPoint: number, yPoint: number) => void }) {

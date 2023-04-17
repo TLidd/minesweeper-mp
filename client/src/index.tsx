@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/App';
-import GameBoard from './components/GameBoard';
+import GameBoard from './components/MinesweeperGame/GameBoard';
 import reportWebVitals from './reportWebVitals';
 import './styles/index.css'
 
