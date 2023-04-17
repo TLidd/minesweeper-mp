@@ -1,0 +1,12 @@
+.board{
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.board.grid{
+    text-align: center;
+}
