@@ -18,9 +18,11 @@ export default function Tile({ x, y, tileMarker, currentTurn, clickedCallback }:
     const leftClicked = (e: React.MouseEvent) => {
         e.preventDefault();
         if(currentTurn){
-            if (!leftClickedTile) {
-                setLeftClickedTile(true);
-                clickedCallback(x, y);
+            if(!rightClickedTile){
+                if (!leftClickedTile) {
+                    setLeftClickedTile(true);
+                    clickedCallback(x, y);
+                }
             }
         }
     }

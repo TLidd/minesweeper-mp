@@ -1,18 +1,15 @@
 export default class MineSweeperGame {
-    private bombs: number = 10;
-    private length: number = 10;
+    protected bombs: number = 10;
+    protected length: number = 10;
 
-    private board: Array<Array<number>> = [];
+    protected board: Array<Array<number>> = [];
 
     //The grid representing the board with the covered tiles.
-    private coveredBoard: Array<Array<number>> = [];
+    protected coveredBoard: Array<Array<number>> = [];
 
-    private player1: string;
-    private player2: string;
-
-    private playersConnected: number;
-
-    private playerTurn: string;
+    private lost: boolean = false;
+    //remainingTiles == bombs is the win condition
+    private remainingTiles: number;
 
     /**
      * 
@@ -20,7 +17,10 @@ export default class MineSweeperGame {
      * @param bombs the number of bombs on the grid
      */
     constructor(length: number, bombs: number) {
-        if (length != undefined) this.length = length;
+        if (length != undefined){
+            this.length = length;
+            this.remainingTiles = length * length;
+        }
         if (bombs != undefined) this.bombs = bombs;
 
         if (bombs > length * length) {
@@ -28,20 +28,6 @@ export default class MineSweeperGame {
         }
 
         this.createBoard();
-    }
-
-    /**
-     * debug print
-     */
-    public printInfo(): void {
-        let msg: string = `Game info:
-        size: ${this.length} x ${this.length}
-        #ofBombs: ${this.bombs}
-        player1: ${this.player1}
-        player2: ${this.player2}
-        playerTurn: ${this.playerTurn}`;
-
-        console.log(msg);
     }
 
     /**
@@ -89,19 +75,13 @@ export default class MineSweeperGame {
         }
     }
 
-    public makeMove(coordinates: { x: number, y: number }, player: string){
-        if(player == this.playerTurn) this.revealTiles({x: coordinates.x, y: coordinates.y});
-
-        if(player == this.player1) this.playerTurn = this.player2;
-        else this.playerTurn = this.player1;
-    }
-
     /**
      * 
      * @param coordinates takes in a coordinate pair to find the tile clicked
      * @returns the tile number
      */
-    private revealTiles(coordinates: { x: number, y: number }) {
+    protected revealTiles(coordinates: { x: number, y: number }) {
+        this.remainingTiles -= 1;
         this.coveredBoard[coordinates.x][coordinates.y] = this.board[coordinates.x][coordinates.y];
         if (this.board[coordinates.x][coordinates.y] == 0) {
             for (let i = coordinates.x - 1; i <= coordinates.x + 1; i++) {
@@ -112,34 +92,42 @@ export default class MineSweeperGame {
                 }
             }
         }
+
+        if(this.board[coordinates.x][coordinates.y] == -1){
+            this.setPlayerLost();
+        }
     }
 
     /**
      * 
      * @returns the board that reveals the selected tiles from the client
      */
-    public getRevealBoard(): {board: Array<Array<number>>, playerTurn: string} {
-        let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn}
+    public getRevealBoard(): {board: Array<Array<number>>} {
+        let boardInfo = {board: this.coveredBoard}
         return boardInfo;
     }
 
-    /**
-     * 
-     * @param player set player1 or player2 if player1 set
-     * 
-     */
-    public setPlayer(player: string): void{
-        if(!this.playerTurn) this.playerTurn = player;
+    protected setPlayerLost(): void{
+        this.lost = true;
+    }
 
-        if(player != this.player1 && player != this.player2){
-            if(this.player1){
-                this.player2 = player;
-                this.playersConnected += 1;
-                return;
-            }
-            
-            this.player1 = player;
-            this.playersConnected += 1;
-        }
+    protected getPlayerLost(): boolean{
+        return this.lost;
+    }
+
+    protected clearedBoard(): boolean{
+        if(this.remainingTiles == this.bombs) return true;
+        return false;
+    }
+
+    /**
+     * debug print
+     */
+    public printInfo(): void {
+        let msg: string = `Game info:
+        size: ${this.length} x ${this.length}
+        #ofBombs: ${this.bombs}`;
+
+        console.log(msg);
     }
 }

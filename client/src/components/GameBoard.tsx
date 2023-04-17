@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 export default function GameBoard() {
   let [gameState, setGameState] = useState<Array<Array<number>> | null>();
   let [currentTurn, setCurrentTurn] = useState<boolean>(false);
+  let [playerLost, setPlayerLost] = useState<string | null>(null);
 
   let params = useParams();
 
@@ -21,15 +22,15 @@ export default function GameBoard() {
 
     //getGameState();
 
-    function moveMade(gameBoardInfo: {board: Array<Array<number>>, playerTurn: string}){
+    function moveMade(gameBoardInfo: { board: Array<Array<number>>, playerTurn: string, playerLost?: string }) {
       setGameState(gameBoardInfo.board);
-      console.log(gameBoardInfo.playerTurn);
-      if(socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);
+      if (gameBoardInfo.playerLost) setPlayerLost(gameBoardInfo.playerLost);
+      if (socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);
     }
 
-    function receiveGameBoard(gameBoardInfo: {board: Array<Array<number>>, playerTurn: string}){
+    function receiveGameBoard(gameBoardInfo: { board: Array<Array<number>>, playerTurn: string }) {
       setGameState(gameBoardInfo.board);
-      if(socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);
+      if (socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);
     }
 
     socket.emit('requestGameBoard', params.gameID);
@@ -50,7 +51,6 @@ export default function GameBoard() {
   //   const data = await res.json();
   //   setGameState(data);
   // }
-
   return (
     <div className='board'>
       <div>
@@ -68,6 +68,14 @@ export default function GameBoard() {
           })
         }
       </div>
+      {
+        playerLost !== null &&
+        <div>
+          {
+            socket.id === playerLost ? <b>YOU LOSE!</b> : <b>YOU WIN!</b>
+          }
+        </div>
+      }
     </div>
   )
 }

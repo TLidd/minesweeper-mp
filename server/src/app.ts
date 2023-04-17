@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import { Server } from 'socket.io';
 
 import { minesweeperGamesList } from './mSweeperManager/gamesManager';
-import MineSweeperGame from './mSweeperManager/minesweeper';
+import msMPTimed from './mSweeperManager/msMPTimed';
 
 const app: Express = express();
 const PORT = 4000;
@@ -23,9 +23,9 @@ io.on('connection', socket => {
         if(io.sockets.adapter.rooms.get(gameID)){
             if(io.sockets.adapter.rooms.get(gameID).size <= 2){
                 socket.join(gameID);
-                if(minesweeperGamesList.gameExists(gameID.toString())){
+                if(minesweeperGamesList.gameExists(gameID)){
                     minesweeperGamesList.getGame(gameID).setPlayer(socket.id);
-                    io.to(gameID).emit('receiveGameBoard', minesweeperGamesList.getBoard(gameID.toString()));
+                    io.to(gameID).emit('receiveGameBoard', minesweeperGamesList.getBoard(gameID));
                 } else {
                     console.log("game does not exist");
                 }
@@ -35,6 +35,7 @@ io.on('connection', socket => {
         }
     })
 
+    //currently deletes game if anyone leaves the lobby
     socket.on('disconnecting', () => {
         for(let i of socket.rooms){
             minesweeperGamesList.deleteGame(i);
@@ -48,7 +49,7 @@ app.get('/createGame', async (req: Request, res: Response) => {
 
     if(!minesweeperGamesList.gameExists(gameID.toString())){
         // console.log("\nCreating new game...");
-        let newGame = new MineSweeperGame(Number(boardSize), Number(numOfBombs));
+        let newGame = new msMPTimed(Number(boardSize), Number(numOfBombs));
 
         minesweeperGamesList.addGame(gameID.toString(), newGame);
         // minesweeperGamesList.displayGames();

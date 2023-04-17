@@ -1,9 +1,10 @@
-import MineSweeperGame from "./minesweeper";
+import msMPTimed from "./msMPTimed";
+
 
 class gameManager {
-    private gameList: Record<string, MineSweeperGame> = {};
+    private gameList: Record<string, msMPTimed> = {};
 
-    public addGame(gameID: string, game: MineSweeperGame): void {
+    public addGame(gameID: string, game: msMPTimed): void {
         this.gameList[gameID] = game;
     }
 
@@ -20,7 +21,7 @@ class gameManager {
         return this.gameList[gameID].getRevealBoard();
     }
 
-    public getGame(gameID: string): MineSweeperGame {
+    public getGame(gameID: string): msMPTimed {
         return this.gameList[gameID];
     }
 
