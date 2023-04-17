@@ -16,7 +16,8 @@ const io = new Server(3001, {
 io.on('connection', socket => {
     socket.on('createGame', (boardSize: number, numOfBombs: number) => {
         if(!minesweeperGamesList.gameExists(socket.id)){
-            let newGame = new msMPTimed(Number(boardSize), Number(numOfBombs));
+            console.log(numOfBombs);
+            let newGame = new msMPTimed(boardSize, numOfBombs);
     
             minesweeperGamesList.addGame(socket.id, newGame);
 
