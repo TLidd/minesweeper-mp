@@ -1,6 +1,6 @@
 .tile{
     all: unset;
-    width: 40px;
+    width: 30px;
     aspect-ratio: 1/1;
 
     border: 1px solid black;
@@ -11,7 +11,7 @@
 
     background-color: rgb(78, 75, 75);
 
-    font-size: 2rem;
+    font-size: 1.4rem;
 }
 
 .tile.tileClicked{

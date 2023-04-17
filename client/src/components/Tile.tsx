@@ -33,7 +33,7 @@ export default function Tile({ x, y, tileMarker, currentTurn, clickedCallback }:
 
 
     return (
-        <button className={`tile ${leftClickedTile ? 'tileClicked' : ''}`} onClick={leftClicked} onContextMenu={rightClicked}>{rightClickedTile && !leftClickedTile ? 'B' : leftClickedTile ? tileMarker === 0 ? '‎' : `${tileMarker}` : '‎'}</button>
+        <button className={`tile ${leftClickedTile ? 'tileClicked' : ''}`} onClick={leftClicked} onContextMenu={rightClicked}><b>{rightClickedTile && !leftClickedTile ? 'B' : leftClickedTile ? tileMarker === 0 ? '‎' : `${tileMarker}` : '‎'}</b></button>
     )
 }
 
