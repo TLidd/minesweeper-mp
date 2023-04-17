@@ -17,15 +17,15 @@ export default function GameBoard() {
   }
 
   useEffect(() => {
-    // let abortController = new AbortController();
-    // let signal = abortController.signal;
-
-    //getGameState();
 
     function moveMade(gameBoardInfo: { board: Array<Array<number>>, playerTurn: string, playerLost?: string }) {
       setGameState(gameBoardInfo.board);
       if (gameBoardInfo.playerLost) setPlayerLost(gameBoardInfo.playerLost);
       if (socket.id === gameBoardInfo.playerTurn) setCurrentTurn(true);
+      if (gameBoardInfo.playerLost){
+        setPlayerLost(gameBoardInfo.playerLost);
+        setCurrentTurn(false);
+      }
     }
 
     function receiveGameBoard(gameBoardInfo: { board: Array<Array<number>>, playerTurn: string }) {
@@ -42,35 +42,27 @@ export default function GameBoard() {
     return () => {
       socket.off('moveMade', moveMade);
       socket.off('receiveGameBoard', receiveGameBoard);
-      socket.off('requestGameBoard');
     }
   }, [params.gameID])
 
-  // const getGameState = async (signal?: AbortSignal) => {
-  //   const res = await fetch(`/getBoard?gameID=${params.gameID}`, { signal });
-  //   const data = await res.json();
-  //   setGameState(data);
-  // }
   return (
     <div className='board'>
-      <div>
-        {
-          gameState?.map((x: Array<number>, xIndex: number) => {
-            return (
-              <div className='grid' key={xIndex}>
-                {
-                  x.map((tile: number, yIndex) => {
-                    return <Tile x={xIndex} y={yIndex} tileMarker={tile} clickedCallback={tileClickedCallback} currentTurn={currentTurn} key={xIndex + ' ' + yIndex} />
-                  })
-                }
-              </div>
-            )
-          })
-        }
-      </div>
+      {
+        gameState?.map((x: Array<number>, xIndex: number) => {
+          return (
+            <div className= {playerLost !== null ? 'blur-grid' : ''} key={xIndex}>
+              {
+                x.map((tile: number, yIndex) => {
+                  return <Tile x={xIndex} y={yIndex} tileMarker={tile} clickedCallback={tileClickedCallback} currentTurn={currentTurn} key={xIndex + ' ' + yIndex} />
+                })
+              }
+            </div>
+          )
+        })
+      }
       {
         playerLost !== null &&
-        <div>
+        <div className='gameFinish'>
           {
             socket.id === playerLost ? <b>YOU LOSE!</b> : <b>YOU WIN!</b>
           }
