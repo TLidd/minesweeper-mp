@@ -1,3 +1,5 @@
+import '../../styles/MinesweeperGame/PlayerReady.css'
+
 interface PlayerReadyProps{
     readyCallback: () => void;
     isOpponent: boolean;
@@ -6,14 +8,14 @@ interface PlayerReadyProps{
 
 export default function PlayerReady({readyCallback, isOpponent, isReady}: PlayerReadyProps){
     return (
-        <div className='ready-box'>
+        <div id='ready-box'>
             {
-                isOpponent && isReady && <span>Your opponent is ready</span>
+                isOpponent && <div id='opponent'><span id={isReady ? 'ready' : 'not-ready'}>Your opponent is ready</span></div>
             }
             {
                 !isOpponent && <div>
-                <label htmlFor="checkPlayer">I am Ready!</label>
-                <input id="checkPlayer" type="checkbox" onChange={readyCallback}/>
+                <label htmlFor="check-player">I am Ready!</label>
+                <input id="check-player" type="checkbox" onChange={readyCallback}/>
                 </div>
             }
         </div>

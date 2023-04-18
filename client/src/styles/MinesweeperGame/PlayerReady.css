@@ -1,0 +1,40 @@
+#ready-box:has(:not(#opponent)){
+    margin: auto;
+    padding: 1em 2em;
+
+    font-size: 1.4rem;
+
+    border: 2px solid var(--player-text-color);
+    border-radius: 25px;
+
+    background-color: rgba(119, 136, 153, 0.129);
+}
+
+#ready-box:has(#opponent){
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+#ready-box:has(#opponent) #not-ready{
+    visibility: hidden;
+}
+
+#ready-box:has(#opponent) #ready{
+    visibility: visible;
+    color: rgb(255, 217, 0);
+}
+
+#ready-box label{
+    color: rgb(255, 217, 0);
+}
+
+#ready-box #check-player{
+    display: block;
+
+    margin: 1em auto;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 25px;
+}

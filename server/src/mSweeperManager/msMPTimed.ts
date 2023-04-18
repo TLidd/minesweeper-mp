@@ -5,17 +5,6 @@ export interface msGameInfo extends gameInfo{
     player2Time: number;
 }
 
-type timers = {
-    p1: {
-        player: string;
-        timeRemaining: number;
-    }
-    p2: {
-        player: string;
-        timeRemaining: number;
-    }
-}
-
 export default class msMPTimed extends msMultiplayer{
     private timer1: number = 300000;
     private timer2: number = 300000;
@@ -68,22 +57,6 @@ export default class msMPTimed extends msMultiplayer{
 
         return game;
     }
-
-
-    /**
-     * 
-     * @returns the board that reveals the selected tiles from the client
-     */
-    // public getRevealBoard(): {board: Array<Array<number>>} {
-    //     let playerTimes: timers = {p1: {player: this.player1, timeRemaining: this.timer1}, p2: {player: this.player2, timeRemaining: this.timer2}}
-    //     if(this.losingPlayer){
-    //         let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerTimers: playerTimes, playerLost: this.losingPlayer};
-    //         return boardInfo;
-    //     }
-        
-    //     let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerTimers: playerTimes};
-    //     return boardInfo;
-    // }
 
     /**
      * debug print

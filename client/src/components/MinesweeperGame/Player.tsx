@@ -16,7 +16,7 @@ interface PlayerProps{
 export default function Player({player1, playerReady, isOpponent, isReady}: PlayerProps) {
     let playerTag: string = player1 ? 'YOU' : 'OPPONENT'
   return (
-    <div>
+    <div id='player-container'>
         <div id='player-tag'>{playerTag}</div>
         <PlayerReady readyCallback={playerReady} isOpponent={isOpponent} isReady={isReady}/>
     </div>

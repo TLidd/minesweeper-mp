@@ -1,14 +1,15 @@
-#player-box{
+#player-container:not(#opponent){
+    --player-text-color: lightslategray;
+
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
 }
 
 #player-tag{
     margin: auto;
     text-align: center;
 
-    color: lightslategray;
+    color: var(--player-text-color);
 
     font-size: 3rem;
 }
