@@ -3,11 +3,11 @@ import msMultiplayer from "./msMultiplayer";
 type timers = {
     p1: {
         player: string;
-        timeRemaining: number
+        timeRemaining: number;
     }
     p2: {
         player: string;
-        timeRemaining: number
+        timeRemaining: number;
     }
 }
 
@@ -15,7 +15,15 @@ export default class msMPTimed extends msMultiplayer{
     private timer1: number = 300000;
     private timer2: number = 300000;
 
-    private currentTime = new Date().getTime();
+    timerInterval = setInterval(() => {
+        if(this.playerTurn){
+            if(this.playerTurn == this.player1){
+                this.timer1 -= 1000;
+            }else{
+                this.timer2 -= 1000;
+            }
+        }
+    }, 1000)
 
     /**
      * 
@@ -24,19 +32,16 @@ export default class msMPTimed extends msMultiplayer{
      * @param timer1 player1 timer in millis
      * @param timer2 player2 timer in millis
      */
-    constructor(length: number, bombs: number, timer1?: number, timer2?: number){
+    constructor(length: number, bombs: number, timer: number){
         super(length, bombs);
-        if(timer1 && timer2){
-            console.log(timer1);
-            this.timer1 = timer1;
-            this.timer2 = timer2;
+        if(timer){
+            this.timer1 = timer;
+            this.timer2 = timer;
         }
     }
 
     public makeMove(coordinates: { x: number, y: number }, player: string): void{
         if(player == this.playerTurn) this.revealTiles({x: coordinates.x, y: coordinates.y});
-
-        this.manageTimers();
 
         if(this.getPlayerLost()){
             this.losingPlayer = this.playerTurn;
@@ -46,21 +51,6 @@ export default class msMPTimed extends msMultiplayer{
         else this.playerTurn = this.player1;
     }
 
-    private manageTimers(){
-        let endTime = new Date().getTime();
-        let timeDiff = endTime - this.currentTime;
-
-        if(this.player1 == this.playerTurn){
-            this.timer1 = this.timer1 - timeDiff;
-            if(this.timer1 <= 0) this.losingPlayer = this.player1;
-        } 
-        else {
-            this.timer2 = this.timer2 - timeDiff;
-            if(this.timer2 <= 0) this.losingPlayer = this.player2;
-        }
-
-        this.currentTime = endTime;
-    }
 
     /**
      * 

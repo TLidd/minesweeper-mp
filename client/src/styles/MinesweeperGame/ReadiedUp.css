@@ -13,3 +13,7 @@ input{
     width: 2em;
     height: 2em;
 }
+
+.ready-box.hide-check-box{
+    visibility: hidden;
+}

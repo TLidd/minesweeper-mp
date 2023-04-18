@@ -1,11 +1,33 @@
+import { useEffect, useState } from 'react';
 import '../../styles/MinesweeperGame/PlayerTimer.css'
 
-export default function PlayerTimer({timeRemaining} : {timeRemaining: number}) {
-    let mins: number = Math.floor(timeRemaining / 60000);
-    let seconds: number = Number(((timeRemaining % 60000) / 1000).toFixed(0));
+export default function PlayerTimer({timeRemaining, runTimer, lostCallback, gameStarted} 
+    : {timeRemaining: number, runTimer: boolean, lostCallback: () => void, gameStarted: boolean}) {
+    let [timeLeft, setTimeLeft] = useState<number>(timeRemaining);
+    let mins: number = Math.floor(timeLeft / 60000);
+    let seconds: number = Number(((timeLeft % 60000) / 1000).toFixed(0));
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTimeLeft((prevState) => {
+                if(prevState - 1000 <= 0){
+                    clearInterval(interval);
+                    lostCallback();
+                    return 0;
+                }
+                if(runTimer && gameStarted) return prevState - 1000;
+                else return prevState;
+            });
+        }, 1000)
+
+        return () => {
+            clearInterval(interval);
+        }
+    }, [runTimer, gameStarted])
+
   return (
     <div id='player-timer'>
-        {mins+ ":" + (seconds < 10 ? '0' : '') + seconds}
+        {(mins < 10 ? '0' : '') + mins+ ":" + (seconds < 10 ? '0' : '') + seconds}
     </div>
   )
 }

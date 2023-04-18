@@ -17,7 +17,7 @@ io.on('connection', socket => {
     socket.on('createGame', (boardSize: number, numOfBombs: number, timer: number) => {
         if(!minesweeperGamesList.gameExists(socket.id)){
             let millis = (timer * 60) * 1000
-            let newGame = new msMPTimed(boardSize, numOfBombs, millis, millis);
+            let newGame = new msMPTimed(boardSize, numOfBombs, millis);
     
             minesweeperGamesList.addGame(socket.id, newGame);
 
@@ -44,6 +44,16 @@ io.on('connection', socket => {
                 console.log("Too many players");
             }
         }
+    })
+
+    socket.on('playerLost', (gameID) => {
+        io.to(gameID).emit(socket.id);
+    })
+
+    socket.on('readyPlayer', (gameID) => {
+        let game = minesweeperGamesList.getGame(gameID)
+        let startPlayer = game.playerReady(socket.id);
+        if(startPlayer) io.emit('gameStart', startPlayer);
     })
 
     //currently deletes game if anyone leaves the lobby

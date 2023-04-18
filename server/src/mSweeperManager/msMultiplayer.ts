@@ -7,6 +7,9 @@ export default class msMultiplayer extends MineSweeperGame{
     protected playerTurn: string;
     protected losingPlayer: string;
 
+    protected player1Ready: boolean = false;
+    protected player2Ready: boolean = false;
+
     constructor(length: number, bombs: number){
         super(length, bombs);
     }
@@ -28,8 +31,6 @@ export default class msMultiplayer extends MineSweeperGame{
      * 
      */
     public setPlayer(player: string): void{
-        if(!this.playerTurn) this.playerTurn = player;
-
         if(player != this.player1 && player != this.player2){
             if(this.player1){
                 this.player2 = player;
@@ -49,9 +50,25 @@ export default class msMultiplayer extends MineSweeperGame{
             let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerLost: this.losingPlayer};
             return boardInfo;
         }
-        
+
         let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn};
         return boardInfo;
+    }
+
+    public playerReady(playerID: string): string | null{
+        if(this.player1 == playerID){
+            if(this.player1Ready) this.player1Ready = false;
+            else this.player1Ready = true;
+        }
+        else if(this.player2 == playerID){
+            if(this.player2Ready) this.player2Ready = false;
+            else this.player2Ready = true;
+        }
+
+        if(this.player1Ready && this.player2Ready){
+            this.playerTurn = this.player1;
+            return this.player1;
+        }
     }
 
 
