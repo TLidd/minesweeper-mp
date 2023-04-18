@@ -1,0 +1,17 @@
+.game-container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.game-container .item{
+    flex-basis: 0;
+    flex: 1 1 0px;
+}
+
+.game-container > :nth-child(2){
+    border: 1px solid black;
+    border-top: none;
+    border-bottom: none;
+    background-color: rgba(119, 136, 153, 0.04);
+}

@@ -7,6 +7,7 @@ interface TiledBoardProps{
     currentPlayerTurn: boolean;
 }
 
+//creates the board from the 2d array.
 export default function TiledBoard({currentBoard, tileClickedCallback, currentPlayerTurn}: TiledBoardProps) {
   return (
     <div id='tiled-board'>

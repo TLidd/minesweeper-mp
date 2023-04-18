@@ -3,3 +3,12 @@
     flex-direction: column;
     justify-content: space-evenly;
 }
+
+#player-tag{
+    margin: auto;
+    text-align: center;
+
+    color: lightslategray;
+
+    font-size: 3rem;
+}
