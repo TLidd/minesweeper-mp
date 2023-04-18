@@ -1,0 +1,14 @@
+#tiled-board{
+    display: flex;
+    flex-wrap: nowrap;
+
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+}
+
+#tiled-board #tiled-board-row{
+    white-space: nowrap;
+    border: 5px solid black;
+}

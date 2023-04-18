@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import InvitePlayers from './InvitePlayers';
+import TiledBoard from './TiledBoard';
 
 export default function MSMPManager() {
     //the current board state with the covered tiles.
@@ -16,11 +17,15 @@ export default function MSMPManager() {
 
     let params = useParams();
 
+    const tileClicked = (x: number, y: number) => {
+
+    }
+
     useEffect(() => {
         //get the initial board state and player info.
         function getInitialBoard(gameInfo: any): void{
             //get the initial covered board state
-            setBoardState(gameInfo.board);
+            setBoardState(gameInfo.board.board);
 
             //set the players opponent
             if(socket.id === gameInfo.player1) setOpponent(gameInfo.player2);
@@ -39,6 +44,7 @@ export default function MSMPManager() {
   return (
     <div>
         {!boardState && <InvitePlayers linkCopy={`${process.env.REACT_APP_SERVER}/game/${params.gameID}`}/>}
+        {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id == currentPlayerTurn} tileClickedCallback={tileClicked}/>}
     </div>
   )
 }

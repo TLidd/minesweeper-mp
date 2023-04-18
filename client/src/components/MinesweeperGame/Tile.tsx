@@ -1,7 +1,15 @@
 import '../../styles/MinesweeperGame/Tile.css'
 import { useState } from 'react';
 
-export default function Tile({ x, y, tileMarker, currentTurn, clickedCallback }: { x: number, y: number, tileMarker: number, currentTurn: boolean, clickedCallback: (xPoint: number, yPoint: number) => void }) {
+interface TileProps{
+    x: number;
+    y: number;
+    tileMarker: number;
+    currentTurn: boolean;
+    clickedCallback: (x: number, y: number) => void;
+}
+
+export default function Tile({ x, y, tileMarker, currentTurn, clickedCallback }: TileProps) {
     let [rightClickedTile, setRightClickedTile] = useState(false);
     let [leftClickedTile, setLeftClickedTile] = useState(false);
 
