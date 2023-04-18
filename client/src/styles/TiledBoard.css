@@ -6,6 +6,8 @@
     align-items: center;
 
     height: 100vh;
+
+    padding: 0 5em;
 }
 
 #tiled-board #tiled-board-row{

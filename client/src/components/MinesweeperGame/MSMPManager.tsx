@@ -47,17 +47,19 @@ export default function MSMPManager() {
   return (
     <div>
         {!boardState && <InvitePlayers linkCopy={`${process.env.REACT_APP_SERVER}/game/${params.gameID}`}/>}
-        <div className='game-container'>
-            <div className='item'>
-                <Player player1={true}/>
+        {boardState &&
+            <div className='game-container'>
+                <div className='item'>
+                    <Player player1={true}/>
+                </div>
+                <div className='item'>
+                    {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id == currentPlayerTurn} tileClickedCallback={tileClicked}/>}
+                </div>
+                <div className='item'>
+                    <Player player1={false}/>
+                </div>
             </div>
-            <div className='item'>
-                {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id == currentPlayerTurn} tileClickedCallback={tileClicked}/>}
-            </div>
-            <div className='item'>
-                <Player player1={false}/>
-            </div>
-        </div>
+        }
     </div>
   )
 }
