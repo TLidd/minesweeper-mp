@@ -98,6 +98,10 @@ export default class msMultiplayer extends MineSweeperGame{
         }
     }
 
+    /**
+     * sets the playerTurn to player1 on game start
+     * @returns true if players are ready or false if both players aren't ready
+     */
     public getPlayersReady(): boolean{
         if(this.player1Ready && this.player2Ready){
             this.gameStart = true;

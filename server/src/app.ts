@@ -14,6 +14,7 @@ const io = new Server(3001, {
 });
 
 io.on('connection', socket => {
+    //creates the game based on the specifications the player selected.
     socket.on('createGame', (boardSize: number, numOfBombs: number, timer: number) => {
         if(!minesweeperGamesList.gameExists(socket.id)){
             let millis = (timer * 60) * 1000
@@ -25,6 +26,7 @@ io.on('connection', socket => {
         }
     })
 
+    //connects the two players to the lobby and loads the initial board.
     socket.on('lobbyConnect', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
             if(io.sockets.adapter.rooms.get(gameID).size <= 2){
@@ -41,6 +43,7 @@ io.on('connection', socket => {
         }
     })
 
+    //readies or unreadies the player and if both players are ready it starts the game.
     socket.on('playerIsReady', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
             if(io.sockets.adapter.rooms.get(gameID).size == 2){
