@@ -16,11 +16,13 @@ export default function MSMPManager() {
 
     useEffect(() => {
         //get the initial board state and player info.
-        function getInitialBoard(board: Array<Array<number>>, opponent: string, currentTurn: string): void{
-            // setBoardState(board);
-            // setOpponent(opponent);
-            // setCurrentPlayerTurn(currentTurn);
-            console.log("got board");
+        function getInitialBoard(gameInfo: any): void{
+            //get the initial covered board state
+            setBoardState(gameInfo.board);
+
+            //set the players opponent
+            if(socket.id === gameInfo.player1) setOpponent(gameInfo.player2);
+            else setOpponent(gameInfo.player1);
         }
         socket.on('initialBoard', getInitialBoard);
 

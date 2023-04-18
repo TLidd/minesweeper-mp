@@ -1,4 +1,9 @@
-import msMultiplayer from "./msMultiplayer";
+import msMultiplayer, { gameInfo } from "./msMultiplayer";
+
+export interface msGameInfo extends gameInfo{
+    player1Time: number;
+    player2Time: number;
+}
 
 type timers = {
     p1: {
@@ -51,21 +56,34 @@ export default class msMPTimed extends msMultiplayer{
         else this.playerTurn = this.player1;
     }
 
+    public getGameInfo(): msGameInfo {
+        let currentBoard = this.getCurrentBoard();
+        let game: msGameInfo= {
+            board: currentBoard,
+            player1: this.player1,
+            player2: this.player2,
+            player1Time: this.timer1,
+            player2Time: this.timer2
+        }
+
+        return game;
+    }
+
 
     /**
      * 
      * @returns the board that reveals the selected tiles from the client
      */
-    public getRevealBoard(): {board: Array<Array<number>>, playerTurn: string, playerTimers: timers, playerLost?: string} {
-        let playerTimes: timers = {p1: {player: this.player1, timeRemaining: this.timer1}, p2: {player: this.player2, timeRemaining: this.timer2}}
-        if(this.losingPlayer){
-            let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerTimers: playerTimes, playerLost: this.losingPlayer};
-            return boardInfo;
-        }
+    // public getRevealBoard(): {board: Array<Array<number>>} {
+    //     let playerTimes: timers = {p1: {player: this.player1, timeRemaining: this.timer1}, p2: {player: this.player2, timeRemaining: this.timer2}}
+    //     if(this.losingPlayer){
+    //         let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerTimers: playerTimes, playerLost: this.losingPlayer};
+    //         return boardInfo;
+    //     }
         
-        let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerTimers: playerTimes};
-        return boardInfo;
-    }
+    //     let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerTimers: playerTimes};
+    //     return boardInfo;
+    // }
 
     /**
      * debug print

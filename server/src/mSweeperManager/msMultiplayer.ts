@@ -1,5 +1,12 @@
 import MineSweeperGame from "./minesweeper";
 
+export interface gameInfo{
+    board: any;
+    player1: string;
+    player2: string;
+    playerTurn?: string;
+}
+
 export default class msMultiplayer extends MineSweeperGame{
     protected player1: string;
     protected player2: string;
@@ -41,19 +48,30 @@ export default class msMultiplayer extends MineSweeperGame{
         }
     }
 
+    public getGameInfo(): gameInfo {
+        let currentBoard = this.getCurrentBoard();
+        let game: gameInfo= {
+            board: currentBoard,
+            player1: this.player1,
+            player2: this.player2,
+        }
+
+        return game;
+    }
+
     /**
      * 
      * @returns the board that reveals the selected tiles from the client
      */
-    public getRevealBoard(): {board: Array<Array<number>>, playerTurn: string, playerLost?: string} {
-        if(this.losingPlayer){
-            let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerLost: this.losingPlayer};
-            return boardInfo;
-        }
+    // public getRevealBoard(): {board: Array<Array<number>>, playerTurn: string, playerLost?: string} {
+    //     if(this.losingPlayer){
+    //         let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerLost: this.losingPlayer};
+    //         return boardInfo;
+    //     }
 
-        let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn};
-        return boardInfo;
-    }
+    //     let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn};
+    //     return boardInfo;
+    // }
 
     public playerReady(playerID: string): string | null{
         if(this.player1 == playerID){

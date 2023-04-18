@@ -1,4 +1,4 @@
-import msMPTimed from "./msMPTimed";
+import msMPTimed, { msGameInfo } from "./msMPTimed";
 
 
 class gameManager {
@@ -15,10 +15,10 @@ class gameManager {
     /**
      * 
      * @param gameID 
-     * @returns the game board that shows the revealed tiles.
+     * @returns the game info that shows the current board and player info.
      */
-    public getBoard(gameID: string): {board: Array<Array<number>>, playerTurn: string} {
-        return this.gameList[gameID].getRevealBoard();
+    public getCurrentGameInfo(gameID: string): msGameInfo {
+        return this.gameList[gameID].getGameInfo();
     }
 
     public getGame(gameID: string): msMPTimed {

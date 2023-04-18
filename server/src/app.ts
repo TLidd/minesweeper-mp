@@ -32,7 +32,7 @@ io.on('connection', socket => {
                 let game = minesweeperGamesList.getGame(gameID);
                 if(game){
                     game.setPlayer(socket.id);
-                    if(game.playersLoaded()) io.to(gameID).emit('initialBoard');
+                    if(game.playersLoaded()) io.to(gameID).emit('initialBoard', minesweeperGamesList.getCurrentGameInfo(gameID));
                 }else{
                     //need to handle the no game exists state.
                     console.log("Lobby/Game does not exist");
