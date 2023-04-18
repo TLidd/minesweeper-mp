@@ -22,6 +22,8 @@ export default function MSMPManager() {
     //tracking who's turn it is (server will initialize)
     let [currentPlayerTurn, setCurrentPlayerTurn] = useState<string | null>(null);
 
+    let [playerLost, setPlayerLost] = useState<string | null>(null);
+
     let params = useParams();
 
     const tileClicked = (x: number, y: number) => {
@@ -33,7 +35,7 @@ export default function MSMPManager() {
     }
 
     const PlayerLost = () => {
-        socket.emit('playerLost', socket.id);
+        socket.emit('playerLost', params.gameID);
     }
 
     useEffect(() => {
@@ -65,6 +67,11 @@ export default function MSMPManager() {
         }
         socket.on('playerReadied', playerReadied);
 
+        function playerLost(playerID: string): void{
+            setPlayerLost(playerID);
+        }
+        socket.on('playerLost', playerLost);
+
         //connect to the lobby/room (fill game data)
         socket.emit('lobbyConnect', params.gameID);
 
@@ -80,13 +87,13 @@ export default function MSMPManager() {
         {boardState &&
             <div className='game-container'>
                 <div className='item'>
-                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={socket.id === currentPlayerTurn} timeLeft={timeLeft}/>
+                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={playerLost !== null && socket.id === currentPlayerTurn} timeLeft={timeLeft}/>
                 </div>
                 <div className='item'>
                     {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id === currentPlayerTurn} tileClickedCallback={tileClicked}/>}
                 </div>
                 <div className='item'>
-                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={socket.id === currentPlayerTurn} timeLeft={opponentTimeLeft}/>
+                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost !== null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft}/>
                 </div>
             </div>
         }

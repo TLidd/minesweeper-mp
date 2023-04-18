@@ -51,12 +51,18 @@ io.on('connection', socket => {
                 if(game){
                     let playerReady = game.playerReady(socket.id);
                     if(game.getPlayersReady()){
-                        io.emit('startGame', game.getGameInfo());
+                        io.to(gameID).emit('startGame', game.getGameInfo());
                     } else {
-                        io.emit('playerReadied', socket.id, playerReady);
+                        io.to(gameID).emit('playerReadied', socket.id, playerReady);
                     }
                 }
             }
+        }
+    })
+
+    socket.on('playerLost', (gameID) => {
+        if(io.sockets.adapter.rooms.get(gameID)){
+            io.to(gameID).emit('playerLost', socket.id);
         }
     })
 
