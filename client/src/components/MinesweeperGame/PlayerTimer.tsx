@@ -32,7 +32,7 @@ export default function PlayerTimer({timeRemaining, runTimer, isOpponent, lostCa
         return () => {
             clearInterval(interval);
         }
-    }, [runTimer])
+    }, [runTimer, isOpponent, lostCallback])
 
   return (
     <div id='player-timer'>

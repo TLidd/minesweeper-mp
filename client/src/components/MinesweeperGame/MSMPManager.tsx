@@ -72,12 +72,19 @@ export default function MSMPManager() {
         }
         socket.on('playerLost', playerLost);
 
+        function startGame(gameInfo: any){
+            setCurrentPlayerTurn(gameInfo.playerTurn);
+        }
+        socket.on('startGame', startGame);
+
         //connect to the lobby/room (fill game data)
         socket.emit('lobbyConnect', params.gameID);
 
         return () => {
             socket.off('initialBoard', getInitialBoard);
             socket.off('playerReadied', playerReadied);
+            socket.off('startGame', startGame);
+            socket.off('playerLost', playerLost);
         }
     }, [params, opponent])
 
@@ -87,13 +94,13 @@ export default function MSMPManager() {
         {boardState &&
             <div className='game-container'>
                 <div className='item'>
-                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={playerLost !== null && socket.id === currentPlayerTurn} timeLeft={timeLeft}/>
+                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={playerLost === null && socket.id === currentPlayerTurn} timeLeft={timeLeft}/>
                 </div>
                 <div className='item'>
                     {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id === currentPlayerTurn} tileClickedCallback={tileClicked}/>}
                 </div>
                 <div className='item'>
-                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost !== null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft}/>
+                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost === null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft}/>
                 </div>
             </div>
         }

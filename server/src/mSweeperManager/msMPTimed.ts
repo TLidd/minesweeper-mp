@@ -47,13 +47,15 @@ export default class msMPTimed extends msMultiplayer{
 
     public getGameInfo(): msGameInfo {
         let currentBoard = this.getCurrentBoard();
-        let game: msGameInfo= {
+        let game: msGameInfo = {
             board: currentBoard,
             player1: this.player1,
             player2: this.player2,
             player1Time: this.timer1,
             player2Time: this.timer2
         }
+
+        if(this.gameStart) game.playerTurn = this.playerTurn;
 
         return game;
     }
