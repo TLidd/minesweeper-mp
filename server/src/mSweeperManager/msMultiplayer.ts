@@ -71,6 +71,18 @@ export default class msMultiplayer extends MineSweeperGame{
         }
     }
 
+    /**
+     * 
+     * @returns true if both players are registered to the lobby/game
+     */
+    public playersLoaded(): boolean{
+        if(this.player1){
+            if(this.player2){
+                return true;
+            }
+        }
+    }
+
 
     /**
      * debug print

@@ -21,47 +21,63 @@ io.on('connection', socket => {
     
             minesweeperGamesList.addGame(socket.id, newGame);
 
-            io.emit('createdGame', socket.id);
+            io.to(socket.id).emit('createdGame', socket.id);
         }
     })
 
-    socket.on('makeMove', (x: number, y: number, gameID: string) => {
-        minesweeperGamesList.getGame(gameID).makeMove({x, y}, socket.id);
-        io.to(gameID).emit('moveMade', minesweeperGamesList.getBoard(gameID));
-    })
-
-    socket.on('requestGameBoard', (gameID: string) => {
+    socket.on('lobbyConnect', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
             if(io.sockets.adapter.rooms.get(gameID).size <= 2){
                 socket.join(gameID);
-                if(minesweeperGamesList.gameExists(gameID)){
-                    minesweeperGamesList.getGame(gameID).setPlayer(socket.id);
-                    io.to(gameID).emit('receiveGameBoard', minesweeperGamesList.getBoard(gameID));
-                } else {
-                    console.log("game does not exist");
+                let game = minesweeperGamesList.getGame(gameID);
+                if(game){
+                    game.setPlayer(socket.id);
+                    if(game.playersLoaded()) io.to(gameID).emit('initialBoard');
+                }else{
+                    //need to handle the no game exists state.
+                    console.log("Lobby/Game does not exist");
                 }
-            }else{
-                console.log("Too many players");
             }
         }
     })
 
-    socket.on('playerLost', (gameID) => {
-        io.to(gameID).emit(socket.id);
-    })
+    // socket.on('makeMove', (x: number, y: number, gameID: string) => {
+    //     minesweeperGamesList.getGame(gameID).makeMove({x, y}, socket.id);
+    //     io.to(gameID).emit('moveMade', minesweeperGamesList.getBoard(gameID));
+    // })
 
-    socket.on('readyPlayer', (gameID) => {
-        let game = minesweeperGamesList.getGame(gameID)
-        let startPlayer = game.playerReady(socket.id);
-        if(startPlayer) io.emit('gameStart', startPlayer);
-    })
+    // socket.on('requestGameBoard', (gameID: string) => {
+    //     if(io.sockets.adapter.rooms.get(gameID)){
+    //         if(io.sockets.adapter.rooms.get(gameID).size <= 2){
+    //             socket.join(gameID);
+    //             if(minesweeperGamesList.gameExists(gameID)){
+    //                 minesweeperGamesList.getGame(gameID).setPlayer(socket.id);
+    //                 io.to(gameID).emit('receiveGameBoard', minesweeperGamesList.getBoard(gameID));
+    //             } else {
+    //                 console.log("game does not exist");
+    //             }
+    //         }else{
+    //             console.log("Too many players");
+    //         }
+    //     }
+    // })
 
-    //currently deletes game if anyone leaves the lobby
-    socket.on('disconnecting', () => {
-        for(let i of socket.rooms){
-            minesweeperGamesList.deleteGame(i);
-        }
-    })
+    // socket.on('playerLost', (gameID) => {
+    //     io.to(gameID).emit(socket.id);
+    // })
+
+    // socket.on('readyPlayer', (gameID) => {
+    //     let game = minesweeperGamesList.getGame(gameID)
+    //     let startPlayer = game.playerReady(socket.id);
+    //     if(startPlayer) io.emit('gameStart', startPlayer);
+    // })
+
+    // //currently deletes game if anyone leaves the lobby
+    // socket.on('disconnecting', () => {
+    //     for(let i of socket.rooms){
+    //         minesweeperGamesList.deleteGame(i);
+    //     }
+    // })
 })
 
 
