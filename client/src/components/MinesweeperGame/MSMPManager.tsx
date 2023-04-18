@@ -2,6 +2,8 @@ import { socket } from '../../socket';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
+import InvitePlayers from './InvitePlayers';
+
 export default function MSMPManager() {
     //the current board state with the covered tiles.
     let [boardState, setBoardState] = useState<Array<Array<number>> | null>();
@@ -35,6 +37,8 @@ export default function MSMPManager() {
     }, [])
 
   return (
-    <div>MSMPManager</div>
+    <div>
+        {!boardState && <InvitePlayers linkCopy={`${process.env.REACT_APP_SERVER}/game/${params.gameID}`}/>}
+    </div>
   )
 }
