@@ -73,15 +73,28 @@ export default class msMultiplayer extends MineSweeperGame{
     //     return boardInfo;
     // }
 
-
-    public playerReady(playerID: string): void{
+    /**
+     * 
+     * @param playerID takes in a player 
+     * @returns whether the player is ready or not
+     */
+    public playerReady(playerID: string): boolean{
         if(this.player1 == playerID){
-            if(this.player1Ready) this.player1Ready = false;
-            else this.player1Ready = true;
-        }
-        else if(this.player2 == playerID){
-            if(this.player2Ready) this.player2Ready = false;
-            else this.player2Ready = true;
+            if(this.player1Ready){
+                this.player1Ready = false;
+                return false;
+            } else {
+                this.player1Ready = true;
+                return true;
+            }
+        } else {
+            if(this.player2Ready){
+                this.player2Ready = false;
+                return false;
+            } else {
+                this.player2Ready = true;
+                return true;
+            }
         }
     }
 

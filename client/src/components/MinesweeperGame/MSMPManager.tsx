@@ -41,9 +41,11 @@ export default function MSMPManager() {
         }
         socket.on('initialBoard', getInitialBoard);
 
-        //when the opponent readies, let this player know
-        function playerReadied(playerID: string): void{
-            if(opponent === playerID) setOpponentReady(true);
+        //shows this player that their opponent readied up or unreadied.
+        function playerReadied(playerID: string, isReady: boolean): void{
+            if(opponent === playerID){
+                setOpponentReady(isReady);
+            }
         }
         socket.on('playerReadied', playerReadied);
 

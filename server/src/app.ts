@@ -46,11 +46,11 @@ io.on('connection', socket => {
             if(io.sockets.adapter.rooms.get(gameID).size == 2){
                 let game = minesweeperGamesList.getGame(gameID);
                 if(game){
-                    game.playerReady(socket.id);
+                    let playerReady = game.playerReady(socket.id);
                     if(game.getPlayersReady()){
                         io.emit('startGame', game.getGameInfo());
                     } else {
-                        io.emit('playerReadied', socket.id);
+                        io.emit('playerReadied', socket.id, playerReady);
                     }
                 }
             }
