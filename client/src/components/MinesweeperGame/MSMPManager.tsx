@@ -14,6 +14,7 @@ export default function MSMPManager() {
 
     //this player can use socket.id to identify, opponent will be initialized by server.
     let [opponent, setOpponent] = useState<string | null>();
+    let [opponentReady, setOpponentReady] = useState<boolean>(false);
 
     //tracking who's turn it is (server will initialize)
     let [currentPlayerTurn, setCurrentPlayerTurn] = useState<string | null>(null);
@@ -22,6 +23,10 @@ export default function MSMPManager() {
 
     const tileClicked = (x: number, y: number) => {
 
+    }
+
+    const PlayerIsReady = () => {
+        socket.emit('playerIsReady', params.gameID);
     }
 
     useEffect(() => {
@@ -36,13 +41,20 @@ export default function MSMPManager() {
         }
         socket.on('initialBoard', getInitialBoard);
 
+        //when the opponent readies, let this player know
+        function playerReadied(playerID: string): void{
+            if(opponent === playerID) setOpponentReady(true);
+        }
+        socket.on('playerReadied', playerReadied);
+
         //connect to the lobby/room (fill game data)
         socket.emit('lobbyConnect', params.gameID);
 
         return () => {
             socket.off('initialBoard', getInitialBoard);
+            socket.off('playerReadied', playerReadied);
         }
-    }, [])
+    }, [params, opponent])
 
   return (
     <div>
@@ -50,13 +62,13 @@ export default function MSMPManager() {
         {boardState &&
             <div className='game-container'>
                 <div className='item'>
-                    <Player player1={true}/>
+                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false}/>
                 </div>
                 <div className='item'>
-                    {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id == currentPlayerTurn} tileClickedCallback={tileClicked}/>}
+                    {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id === currentPlayerTurn} tileClickedCallback={tileClicked}/>}
                 </div>
                 <div className='item'>
-                    <Player player1={false}/>
+                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady}/>
                 </div>
             </div>
         }

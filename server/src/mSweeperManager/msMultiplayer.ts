@@ -17,6 +17,8 @@ export default class msMultiplayer extends MineSweeperGame{
     protected player1Ready: boolean = false;
     protected player2Ready: boolean = false;
 
+    protected gameStart: boolean = false;
+
     constructor(length: number, bombs: number){
         super(length, bombs);
     }
@@ -56,13 +58,11 @@ export default class msMultiplayer extends MineSweeperGame{
             player2: this.player2,
         }
 
+        if(this.gameStart) game.playerTurn = this.playerTurn;
+
         return game;
     }
 
-    /**
-     * 
-     * @returns the board that reveals the selected tiles from the client
-     */
     // public getRevealBoard(): {board: Array<Array<number>>, playerTurn: string, playerLost?: string} {
     //     if(this.losingPlayer){
     //         let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerLost: this.losingPlayer};
@@ -73,7 +73,8 @@ export default class msMultiplayer extends MineSweeperGame{
     //     return boardInfo;
     // }
 
-    public playerReady(playerID: string): string | null{
+
+    public playerReady(playerID: string): void{
         if(this.player1 == playerID){
             if(this.player1Ready) this.player1Ready = false;
             else this.player1Ready = true;
@@ -82,11 +83,15 @@ export default class msMultiplayer extends MineSweeperGame{
             if(this.player2Ready) this.player2Ready = false;
             else this.player2Ready = true;
         }
+    }
 
+    public getPlayersReady(): boolean{
         if(this.player1Ready && this.player2Ready){
+            this.gameStart = true;
             this.playerTurn = this.player1;
-            return this.player1;
+            return true;
         }
+        return false;
     }
 
     /**
