@@ -64,11 +64,24 @@ io.on('connection', socket => {
         if(io.sockets.adapter.rooms.get(gameID)){
             let game = minesweeperGamesList.getGame(gameID);
             game.makeMove({x, y}, socket.id);
-            io.to(gameID).emit('getMoveMade', minesweeperGamesList.getGame(gameID).getGameInfo());
+
+            let gameInfo = game.getGameInfo()
+            io.to(gameID).emit('getMoveMade', gameInfo);
+
+            //if the board is cleared then select the loser based on the time each player has left.
+            if(game.clearedBoard()){
+                let losingPlayer: string;
+                if(gameInfo.player1Time > gameInfo.player2Time){
+                    losingPlayer = gameInfo.player2;
+                } else {
+                    losingPlayer = gameInfo.player1;
+                }
+                io.to(gameID).emit('playerLost', losingPlayer);
+            }
         }
     })
 
-    socket.on('playerLostToTime', (gameID) => {
+    socket.on('playerLost', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
             io.to(gameID).emit('playerLost', socket.id);
         }

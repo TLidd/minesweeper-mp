@@ -114,7 +114,7 @@ export default class MineSweeperGame {
         return this.lost;
     }
 
-    protected clearedBoard(): boolean{
+    public clearedBoard(): boolean{
         if(this.remainingTiles == this.bombs) return true;
         return false;
     }

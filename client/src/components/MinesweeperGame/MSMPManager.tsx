@@ -82,11 +82,10 @@ export default function MSMPManager() {
         }
         socket.on('playerReadied', playerReadied);
 
-        //if the timer runs down to 0
-        function playerLostToTime(playerID: string): void{
+        function playerLost(playerID: string): void{
             setPlayerLost(playerID);
         }
-        socket.on('playerLostToTime', playerLostToTime);
+        socket.on('playerLost', playerLost);
 
         function startGame(gameInfo: any){
             setCurrentPlayerTurn(gameInfo.playerTurn);
@@ -125,11 +124,11 @@ export default function MSMPManager() {
             socket.off('initialBoard', getInitialBoard);
             socket.off('playerReadied', playerReadied);
             socket.off('startGame', startGame);
-            socket.off('playerLostToTime', playerLostToTime);
+            socket.off('playerLostToTime', playerLost);
             socket.off('getMoveMade', getMoveMade);
         }
     }, [params, opponent])
-    
+
   return (
     <div>
         {!boardState && <InvitePlayers linkCopy={`${process.env.REACT_APP_SERVER}/game/${params.gameID}`}/>}

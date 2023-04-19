@@ -65,7 +65,7 @@ function App() {
       MINESWEEPER
       <div>
         <label htmlFor="boardSize">Board Size</label>
-        <input id="boardSize" type="range" min={5} max={25} defaultValue={10} onChange={setBoard} />
+        <input id="boardSize" type="range" min={5} max={30} defaultValue={10} onChange={setBoard} />
         <output htmlFor='boardSize'>{`${boardSize} x ${boardSize}`}</output>
       </div>
 
