@@ -12,10 +12,8 @@ interface PlayerTimerProps{
 }
 
 export default function PlayerTimer({timeRemaining, runTimer, isOpponent, lostCallback, setTimeRemaining}: PlayerTimerProps) {
-    console.log(timeRemaining);
     let mins: number = Math.floor(timeRemaining / 60000);
     let seconds: number = Number(((timeRemaining % 60000) / 1000).toFixed(0));
-    console.log(seconds);
 
     useEffect(() => {
         const interval = setInterval(() => {

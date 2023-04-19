@@ -17,6 +17,8 @@ export default function MSMPManager() {
     let [opponent, setOpponent] = useState<string | null>();
     let [opponentReady, setOpponentReady] = useState<boolean>(false);
 
+    let [playerReady, setPlayerReady] = useState<boolean>(false);
+
     let [timeLeft, setTimeLeft] = useState<number>(0);
     let [opponentTimeLeft, setOpponentTimeLeft] = useState<number>(0);
 
@@ -32,6 +34,7 @@ export default function MSMPManager() {
     }
 
     const PlayerIsReady = () => {
+        setPlayerReady(true);
         socket.emit('playerIsReady', params.gameID);
     }
 
@@ -69,6 +72,7 @@ export default function MSMPManager() {
             setCurrentPlayerTurn(null);
             setPlayerLost(null);
             setOpponentReady(false);
+            setPlayerReady(false);
         }
         socket.on('initialBoard', getInitialBoard);
 
@@ -128,13 +132,13 @@ export default function MSMPManager() {
         {boardState &&
             <div className={`game-container ${playerLost ? 'game-over' : ''}`}>
                 <div className='item'>
-                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={playerLost === null && socket.id === currentPlayerTurn} timeLeft={timeLeft} gameStarted={currentPlayerTurn ? true : false} setTime={setTimeLeft}/>
+                    <Player player1={true} setPlayerReady={PlayerIsReady} isOpponent={false} isReady={playerReady} playerLost={PlayerLost} playerTurn={playerLost === null && socket.id === currentPlayerTurn} timeLeft={timeLeft} gameStarted={currentPlayerTurn ? true : false} setTime={setTimeLeft}/>
                 </div>
                 <div className='item'>
                     {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id === currentPlayerTurn} tileClickedCallback={tileClicked}/>}
                 </div>
                 <div className='item'>
-                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost === null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft} gameStarted={currentPlayerTurn ? true : false} setTime={setOpponentTimeLeft}/>
+                    <Player player1={false} setPlayerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost === null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft} gameStarted={currentPlayerTurn ? true : false} setTime={setOpponentTimeLeft}/>
                 </div>
             </div>
         }

@@ -15,7 +15,7 @@ export default function PlayerReady({readyCallback, isOpponent, isReady}: Player
             {
                 !isOpponent && <div>
                 <label htmlFor="check-player">I am Ready!</label>
-                <input id="check-player" type="checkbox" onChange={readyCallback}/>
+                <input id="check-player" type="checkbox" onChange={readyCallback} checked={isReady}/>
                 </div>
             }
         </div>
