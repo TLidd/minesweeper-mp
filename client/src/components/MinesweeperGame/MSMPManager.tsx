@@ -1,10 +1,11 @@
 import { socket } from '../../socket';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import InvitePlayers from './InvitePlayers';
 import TiledBoard from './TiledBoard';
 import Player from './Player';
+import Disconnected from './Disconnected';
 
 import '../../styles/MinesweeperGame/MSMPManager.css';
 import GameEnd from './GameEnd';
@@ -138,7 +139,7 @@ export default function MSMPManager() {
         }
     }, [params, opponent])
 
-    if(opponentLeft) return <Link to={'/'}>Opponent has left the game...</Link>
+    if(opponentLeft) return <Disconnected />
     
   return (
     <div>
