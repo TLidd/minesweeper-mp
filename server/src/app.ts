@@ -81,7 +81,7 @@ io.on('connection', socket => {
         }
     })
 
-    socket.on('playerLostToTime', (gameID) => {
+    socket.on('playerLost', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
             io.to(gameID).emit('playerLost', socket.id);
         }
@@ -100,6 +100,16 @@ io.on('connection', socket => {
             minesweeperGamesList.addGame(gameID, newGame);
             io.to(gameID).emit('cleanBoard');
             io.to(gameID).emit('initialBoard', minesweeperGamesList.getCurrentGameInfo(gameID));
+        }
+    })
+
+    //a quick disconnect feature that just lets the user know the opponent disconnected.
+    socket.on('disconnecting', () => {
+        for(let roomID of socket.rooms){
+            if(minesweeperGamesList.gameExists(roomID)){
+                minesweeperGamesList.deleteGame(roomID);
+                io.to(roomID).emit('opponentDisconnected');
+            }
         }
     })
 

@@ -1,5 +1,5 @@
 import { socket } from '../../socket';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import InvitePlayers from './InvitePlayers';
@@ -21,6 +21,9 @@ export default function MSMPManager() {
 
     let [timeLeft, setTimeLeft] = useState<number>(0);
     let [opponentTimeLeft, setOpponentTimeLeft] = useState<number>(0);
+
+    // in case opponent leaves.
+    let [opponentLeft, setOpponentLeft] = useState(false);
 
     //tracking who's turn it is (server will initialize)
     let [currentPlayerTurn, setCurrentPlayerTurn] = useState<string | null>(null);
@@ -117,6 +120,11 @@ export default function MSMPManager() {
         }
         socket.on('cleanBoard', cleanBoard);
 
+        function opponentDisconnected(){
+            setOpponentLeft(true);
+        }
+        socket.on('opponentDisconnected', opponentDisconnected);
+
         //connect to the lobby/room (fill game data)
         socket.emit('lobbyConnect', params.gameID);
 
@@ -126,11 +134,15 @@ export default function MSMPManager() {
             socket.off('startGame', startGame);
             socket.off('playerLost', playerLost);
             socket.off('getMoveMade', getMoveMade);
+            socket.off('opponentDisconnected', opponentDisconnected);
         }
     }, [params, opponent])
+
+    if(opponentLeft) return <Link to={'/'}>Opponent has left the game...</Link>
     
   return (
     <div>
+        
         {!boardState && <InvitePlayers linkCopy={`${process.env.REACT_APP_SERVER}/game/${params.gameID}`}/>}
         {boardState &&
             <div className={`game-container ${playerLost ? 'game-over' : ''}`}>

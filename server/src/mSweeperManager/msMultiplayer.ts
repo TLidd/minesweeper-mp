@@ -51,6 +51,11 @@ export default class msMultiplayer extends MineSweeperGame{
         }
     }
 
+    public unsetPlayer(player: string): void{
+        if(player == this.player1) this.player1 = undefined;
+        else if(player == this.player2) this.player2 = undefined;
+    }
+
     public getGameInfo(): gameInfo {
         let currentBoard = this.getCurrentBoard();
         let game: gameInfo= {
@@ -64,16 +69,6 @@ export default class msMultiplayer extends MineSweeperGame{
 
         return game;
     }
-
-    // public getRevealBoard(): {board: Array<Array<number>>, playerTurn: string, playerLost?: string} {
-    //     if(this.losingPlayer){
-    //         let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn, playerLost: this.losingPlayer};
-    //         return boardInfo;
-    //     }
-
-    //     let boardInfo = {board: this.coveredBoard, playerTurn: this.playerTurn};
-    //     return boardInfo;
-    // }
 
     /**
      * 
