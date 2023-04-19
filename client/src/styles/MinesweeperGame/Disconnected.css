@@ -7,5 +7,29 @@
 }
 
 #disconnected-msg{
-    font-size: 5rem;
+    font-size: 4rem;
+    color: rgba(119, 136, 153, 0.411);
+    white-space: nowrap;
+}
+
+#disconnected-container a{
+    all: unset;
+    font-size: 1.2rem;
+
+    display: block;
+    width: fit-content;
+
+    border: 2px solid black;
+    border-radius: 25px;
+    padding: 1em 2em;
+    margin: 2em auto;
+
+    background-color: rgba(119, 136, 153, 0.411);
+
+    transition-duration: 0.25s;
+}
+
+#disconnected-container a:hover{
+    background-color: rgba(119, 136, 153, 0.636);
+    cursor: pointer;
 }
