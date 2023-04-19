@@ -1,15 +1,20 @@
-import { Server } from 'socket.io';
+import { createServer } from "http";
+import { Server, Socket } from 'socket.io';
+import express, { Express } from "express";
+import cors from 'cors';
 
 import { minesweeperGamesList } from './mSweeperManager/gamesManager';
 import msMPTimed from './mSweeperManager/msMPTimed';
 
-const io = new Server(3001, {
-    cors: {
-        origin: "http://localhost:3000"
-    }
-});
+const PORT = process.env.PORT || 4000;
 
-io.on('connection', socket => {
+const app: Express = express();
+app.use(cors());
+const server = createServer(app);
+
+const io = new Server(server, {cors: {origin: 'http://localhost:3000'}});
+
+io.on('connection', (socket: Socket) => {
     //creates the game based on the specifications the player selected.
     socket.on('createGame', (boardSize: number, numOfBombs: number, timer: number) => {
         if(!minesweeperGamesList.gameExists(socket.id)){
@@ -109,3 +114,5 @@ io.on('connection', socket => {
         }
     })
 })
+
+server.listen(PORT, () => console.log(`Server listening on PORT: ${PORT}`));
