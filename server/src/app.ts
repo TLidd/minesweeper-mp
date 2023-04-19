@@ -6,7 +6,7 @@ import cors from 'cors';
 import { minesweeperGamesList } from './mSweeperManager/gamesManager';
 import msMPTimed from './mSweeperManager/msMPTimed';
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 const app: Express = express();
 app.use(cors());
