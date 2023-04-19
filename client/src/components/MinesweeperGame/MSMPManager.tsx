@@ -40,7 +40,7 @@ export default function MSMPManager() {
 
     //if the timer runs down to 0
     const PlayerLost = () => {
-        socket.emit('playerLostToTime', params.gameID);
+        socket.emit('playerLost', params.gameID);
     }
 
     const newGame = () => {
@@ -124,11 +124,11 @@ export default function MSMPManager() {
             socket.off('initialBoard', getInitialBoard);
             socket.off('playerReadied', playerReadied);
             socket.off('startGame', startGame);
-            socket.off('playerLostToTime', playerLost);
+            socket.off('playerLost', playerLost);
             socket.off('getMoveMade', getMoveMade);
         }
     }, [params, opponent])
-
+    
   return (
     <div>
         {!boardState && <InvitePlayers linkCopy={`${process.env.REACT_APP_SERVER}/game/${params.gameID}`}/>}

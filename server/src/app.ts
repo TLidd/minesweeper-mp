@@ -81,7 +81,7 @@ io.on('connection', socket => {
         }
     })
 
-    socket.on('playerLost', (gameID) => {
+    socket.on('playerLostToTime', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
             io.to(gameID).emit('playerLost', socket.id);
         }
