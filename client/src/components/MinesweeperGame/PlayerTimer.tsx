@@ -18,7 +18,7 @@ export default function PlayerTimer({timeRemaining, runTimer, isOpponent, lostCa
     useEffect(() => {
         const interval = setInterval(() => {
             setTimeRemaining((prevState) => {
-                if(prevState - 10 <= 0){
+                if(prevState - 100 <= 0){
                     clearInterval(interval);
                     //if not opponent tell server that player lost.
                     if(!isOpponent){
@@ -26,10 +26,10 @@ export default function PlayerTimer({timeRemaining, runTimer, isOpponent, lostCa
                     }
                     return 0;
                 }
-                if(runTimer) return prevState - 10;
+                if(runTimer) return prevState - 100;
                 else return prevState;
             });
-        }, 10)
+        }, 100)
 
         return () => {
             clearInterval(interval);

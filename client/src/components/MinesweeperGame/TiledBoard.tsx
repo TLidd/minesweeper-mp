@@ -2,7 +2,7 @@ import Tile from "./Tile";
 import '../../styles/TiledBoard.css'
 
 interface TiledBoardProps{
-    currentBoard: any;
+    currentBoard: Array<Array<number>>;
     tileClickedCallback: (x: number, y: number) => void;
     currentPlayerTurn: boolean;
 }
@@ -12,7 +12,7 @@ export default function TiledBoard({currentBoard, tileClickedCallback, currentPl
   return (
     <div id='tiled-board'>
         <div id='tiled-board-row'>
-            {
+            {  
             currentBoard.map((x: Array<number>, xIndex: number) => {
                 return (
                 <div key={xIndex}>

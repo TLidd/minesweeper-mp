@@ -38,8 +38,9 @@ export default function MSMPManager() {
         socket.emit('playerIsReady', params.gameID);
     }
 
+    //if the timer runs down to 0
     const PlayerLost = () => {
-        socket.emit('playerLost', params.gameID);
+        socket.emit('playerLostToTime', params.gameID);
     }
 
     const newGame = () => {
@@ -50,10 +51,7 @@ export default function MSMPManager() {
         //get the initial board state and player info.
         function getInitialBoard(gameInfo: any): void{
             //get the initial covered board state
-            setBoardState(() => {
-                let newBoard = gameInfo.board;
-                return newBoard;
-            });
+            setBoardState(gameInfo.board);
 
             //set the players opponent
             if(socket.id === gameInfo.player1) setOpponent(gameInfo.player2);
@@ -84,10 +82,11 @@ export default function MSMPManager() {
         }
         socket.on('playerReadied', playerReadied);
 
-        function playerLost(playerID: string): void{
+        //if the timer runs down to 0
+        function playerLostToTime(playerID: string): void{
             setPlayerLost(playerID);
         }
-        socket.on('playerLost', playerLost);
+        socket.on('playerLostToTime', playerLostToTime);
 
         function startGame(gameInfo: any){
             setCurrentPlayerTurn(gameInfo.playerTurn);
@@ -114,6 +113,11 @@ export default function MSMPManager() {
         }
         socket.on('getMoveMade', getMoveMade);
 
+        function cleanBoard(){
+            setBoardState(null);
+        }
+        socket.on('cleanBoard', cleanBoard);
+
         //connect to the lobby/room (fill game data)
         socket.emit('lobbyConnect', params.gameID);
 
@@ -121,11 +125,11 @@ export default function MSMPManager() {
             socket.off('initialBoard', getInitialBoard);
             socket.off('playerReadied', playerReadied);
             socket.off('startGame', startGame);
-            socket.off('playerLost', playerLost);
+            socket.off('playerLostToTime', playerLostToTime);
             socket.off('getMoveMade', getMoveMade);
         }
     }, [params, opponent])
-
+    
   return (
     <div>
         {!boardState && <InvitePlayers linkCopy={`${process.env.REACT_APP_SERVER}/game/${params.gameID}`}/>}
