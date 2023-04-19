@@ -5,12 +5,17 @@
     font-size: 5rem;
     font-family: 'Share Tech Mono', monospace;
 
+    text-align: center;
+
+    width: fit-content;
+
+    margin: 0.5em auto;
+    padding: 0.25em .25em;
+
+    background-color: rgba(24, 24, 24, 0.631);
+
     color: rgb(108, 62, 62);
 
     border: 2px solid black;
     border-radius: 15px;
-
-    padding: 0.5em 1em;
-
-    background-color: rgba(24, 24, 24, 0.631);
 }

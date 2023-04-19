@@ -3,6 +3,10 @@
 
     display: flex;
     flex-direction: column;
+
+    justify-content: space-evenly;
+
+    height: 100%;
 }
 
 #player-tag{
@@ -12,4 +16,8 @@
     color: var(--player-text-color);
 
     font-size: 3rem;
+}
+
+#game-started{
+    visibility: hidden;
 }

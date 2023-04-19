@@ -10,6 +10,7 @@ interface PlayerProps{
     timeLeft: number;
     playerTurn: boolean;
     playerLost: () => void;
+    gameStarted: boolean
 }
 
 /**
@@ -17,7 +18,7 @@ interface PlayerProps{
  * @param player1 both players are on the left hand side
  * 
  */
-export default function Player({player1, playerReady, isOpponent, isReady, timeLeft, playerTurn, playerLost}: PlayerProps) {
+export default function Player({player1, playerReady, isOpponent, isReady, timeLeft, playerTurn, playerLost, gameStarted}: PlayerProps) {
     let playerTag: string = player1 ? 'YOU' : 'OPPONENT'
   return (
     <div id='player-container'>
@@ -25,7 +26,9 @@ export default function Player({player1, playerReady, isOpponent, isReady, timeL
             <div id='player-tag'>{playerTag}</div>
             <PlayerTimer timeRemaining={timeLeft} runTimer={playerTurn} lostCallback={playerLost} isOpponent={isOpponent}/>
         </div>
-        <PlayerReady readyCallback={playerReady} isOpponent={isOpponent} isReady={isReady}/>
+        <div id={gameStarted ? 'game-started' : ''}>
+            <PlayerReady readyCallback={playerReady} isOpponent={isOpponent} isReady={isReady}/>
+        </div>
     </div>
   )
 }

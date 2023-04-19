@@ -8,9 +8,13 @@
     border-radius: 25px;
 
     background-color: rgba(119, 136, 153, 0.129);
+
+    width: fit-content;
 }
 
 #ready-box:has(#opponent){
+    background: none;
+    border: none;
     font-size: 1.4rem;
     text-align: center;
 }
@@ -20,7 +24,7 @@
 }
 
 #ready-box:has(#opponent) #ready{
-    visibility: visible;
+    visibility: inherit;
     color: rgb(255, 217, 0);
 }
 

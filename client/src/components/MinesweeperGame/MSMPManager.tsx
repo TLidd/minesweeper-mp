@@ -94,13 +94,13 @@ export default function MSMPManager() {
         {boardState &&
             <div className='game-container'>
                 <div className='item'>
-                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={playerLost === null && socket.id === currentPlayerTurn} timeLeft={timeLeft}/>
+                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={playerLost === null && socket.id === currentPlayerTurn} timeLeft={timeLeft} gameStarted={currentPlayerTurn ? true : false}/>
                 </div>
                 <div className='item'>
                     {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id === currentPlayerTurn} tileClickedCallback={tileClicked}/>}
                 </div>
                 <div className='item'>
-                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost === null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft}/>
+                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost === null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft} gameStarted={currentPlayerTurn ? true : false}/>
                 </div>
             </div>
         }
