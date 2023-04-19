@@ -7,6 +7,7 @@ import TiledBoard from './TiledBoard';
 import Player from './Player';
 
 import '../../styles/MinesweeperGame/MSMPManager.css';
+import GameEnd from './GameEnd';
 
 export default function MSMPManager() {
     //the current board state with the covered tiles.
@@ -27,7 +28,7 @@ export default function MSMPManager() {
     let params = useParams();
 
     const tileClicked = (x: number, y: number) => {
-
+        socket.emit('makeMove', params.gameID, x, y);
     }
 
     const PlayerIsReady = () => {
@@ -38,11 +39,18 @@ export default function MSMPManager() {
         socket.emit('playerLost', params.gameID);
     }
 
+    const newGame = () => {
+        socket.emit('resetGame', params.gameID);
+    }
+
     useEffect(() => {
         //get the initial board state and player info.
         function getInitialBoard(gameInfo: any): void{
             //get the initial covered board state
-            setBoardState(gameInfo.board.board);
+            setBoardState(() => {
+                let newBoard = gameInfo.board;
+                return newBoard;
+            });
 
             //set the players opponent
             if(socket.id === gameInfo.player1) setOpponent(gameInfo.player2);
@@ -56,6 +64,11 @@ export default function MSMPManager() {
                 setTimeLeft(gameInfo.player2Time);
                 setOpponentTimeLeft(gameInfo.player1Time);
             }
+
+            //resetting these variables if the game is reset.
+            setCurrentPlayerTurn(null);
+            setPlayerLost(null);
+            setOpponentReady(false);
         }
         socket.on('initialBoard', getInitialBoard);
 
@@ -77,6 +90,26 @@ export default function MSMPManager() {
         }
         socket.on('startGame', startGame);
 
+        //when the move is relayed from the server update the game information.
+        function getMoveMade(gameInfo: any){
+            setCurrentPlayerTurn(gameInfo.playerTurn);
+            if(gameInfo.playerLost) setPlayerLost(gameInfo.playerLost);
+
+            //set the players times
+            if(socket.id === gameInfo.player1){
+                setTimeLeft(gameInfo.player1Time);
+                setOpponentTimeLeft(gameInfo.player2Time);
+            } else {
+                setTimeLeft(gameInfo.player2Time);
+                setOpponentTimeLeft(gameInfo.player1Time);
+            }
+
+            setBoardState(gameInfo.board);
+
+            if(gameInfo.playerLost) setPlayerLost(gameInfo.playerLost);
+        }
+        socket.on('getMoveMade', getMoveMade);
+
         //connect to the lobby/room (fill game data)
         socket.emit('lobbyConnect', params.gameID);
 
@@ -85,6 +118,7 @@ export default function MSMPManager() {
             socket.off('playerReadied', playerReadied);
             socket.off('startGame', startGame);
             socket.off('playerLost', playerLost);
+            socket.off('getMoveMade', getMoveMade);
         }
     }, [params, opponent])
 
@@ -92,17 +126,21 @@ export default function MSMPManager() {
     <div>
         {!boardState && <InvitePlayers linkCopy={`${process.env.REACT_APP_SERVER}/game/${params.gameID}`}/>}
         {boardState &&
-            <div className='game-container'>
+            <div className={`game-container ${playerLost ? 'game-over' : ''}`}>
                 <div className='item'>
-                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={playerLost === null && socket.id === currentPlayerTurn} timeLeft={timeLeft} gameStarted={currentPlayerTurn ? true : false}/>
+                    <Player player1={true} playerReady={PlayerIsReady} isOpponent={false} playerLost={PlayerLost} playerTurn={playerLost === null && socket.id === currentPlayerTurn} timeLeft={timeLeft} gameStarted={currentPlayerTurn ? true : false} setTime={setTimeLeft}/>
                 </div>
                 <div className='item'>
                     {boardState && <TiledBoard currentBoard={boardState} currentPlayerTurn={socket.id === currentPlayerTurn} tileClickedCallback={tileClicked}/>}
                 </div>
                 <div className='item'>
-                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost === null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft} gameStarted={currentPlayerTurn ? true : false}/>
+                    <Player player1={false} playerReady={PlayerIsReady} isOpponent={true} isReady={opponentReady} playerLost={PlayerLost} playerTurn={playerLost === null && opponent === currentPlayerTurn} timeLeft={opponentTimeLeft} gameStarted={currentPlayerTurn ? true : false} setTime={setOpponentTimeLeft}/>
                 </div>
             </div>
+        }
+        {
+            playerLost && 
+            <GameEnd win={playerLost === socket.id} restartCallback={newGame}/>
         }
     </div>
   )

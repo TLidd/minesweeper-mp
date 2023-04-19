@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { socket } from '../socket';
 import "../styles/App.css"
 
-
 function App() {
   const navigate = useNavigate();
 

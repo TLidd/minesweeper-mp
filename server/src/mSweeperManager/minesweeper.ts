@@ -102,9 +102,8 @@ export default class MineSweeperGame {
      * 
      * @returns the board that reveals the selected tiles from the client
      */
-    protected getCurrentBoard(): {board: Array<Array<number>>} {
-        let boardInfo = {board: this.coveredBoard}
-        return boardInfo;
+    protected getCurrentBoard(): Array<Array<number>> {
+        return this.coveredBoard;
     }
 
     protected setPlayerLost(): void{

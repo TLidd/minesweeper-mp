@@ -60,9 +60,29 @@ io.on('connection', socket => {
         }
     })
 
+    socket.on('makeMove', (gameID, x, y) => {
+        if(io.sockets.adapter.rooms.get(gameID)){
+            let game = minesweeperGamesList.getGame(gameID);
+            game.makeMove({x, y}, socket.id);
+            io.to(gameID).emit('getMoveMade', minesweeperGamesList.getGame(gameID).getGameInfo());
+        }
+    })
+
     socket.on('playerLost', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
             io.to(gameID).emit('playerLost', socket.id);
+        }
+    })
+
+    socket.on('resetGame', (gameID) => {
+        if(io.sockets.adapter.rooms.get(gameID)){
+            let game = minesweeperGamesList.getGame(gameID);
+            let buildInfo = game.getBuildInfo();
+            let newGame = new msMPTimed(buildInfo.length, buildInfo.bombs, buildInfo.time);
+            newGame.setPlayer(buildInfo.p1);
+            newGame.setPlayer(buildInfo.p2);
+            minesweeperGamesList.addGame(gameID, newGame);
+            io.to(gameID).emit('initialBoard', minesweeperGamesList.getCurrentGameInfo(gameID));
         }
     })
 

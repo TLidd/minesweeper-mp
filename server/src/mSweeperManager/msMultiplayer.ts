@@ -5,6 +5,7 @@ export interface gameInfo{
     player1: string;
     player2: string;
     playerTurn?: string;
+    playerLost?: string;
 }
 
 export default class msMultiplayer extends MineSweeperGame{
@@ -59,6 +60,7 @@ export default class msMultiplayer extends MineSweeperGame{
         }
 
         if(this.gameStart) game.playerTurn = this.playerTurn;
+        if(this.losingPlayer) game.playerLost = this.losingPlayer;
 
         return game;
     }

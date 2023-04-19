@@ -9,6 +9,8 @@ export default class msMPTimed extends msMultiplayer{
     private timer1: number = 300000;
     private timer2: number = 300000;
 
+    private initialTime: number;
+
     timerInterval = setInterval(() => {
         if(this.playerTurn){
             if(this.playerTurn == this.player1){
@@ -31,6 +33,7 @@ export default class msMPTimed extends msMultiplayer{
         if(timer){
             this.timer1 = timer;
             this.timer2 = timer;
+            this.initialTime = timer;
         }
     }
 
@@ -56,8 +59,25 @@ export default class msMPTimed extends msMultiplayer{
         }
 
         if(this.gameStart) game.playerTurn = this.playerTurn;
+        if(this.losingPlayer) game.playerLost = this.losingPlayer;
 
         return game;
+    }
+
+    public getBuildInfo(): {
+        p1: string,
+        p2: string,
+        time: number,
+        length: number,
+        bombs: number
+    } {
+        return {
+            p1: this.player1,
+            p2: this.player2,
+            time: this.initialTime,
+            length: this.length,
+            bombs: this.bombs,
+        }
     }
 
     /**

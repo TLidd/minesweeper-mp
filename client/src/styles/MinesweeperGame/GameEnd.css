@@ -1,0 +1,29 @@
+#game-end-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-size: 8rem;
+    padding: 0.25em 0.25em;
+
+    border: 5px solid black;
+    border-radius: 60px;
+    background-color: rgba(119, 136, 153, 0.842);
+
+    color: gold;
+    text-shadow: 5px 5px 5px black;
+}
+
+#game-end-container button{
+    display: block;
+    margin: 0.5em auto;
+
+    font-size: 2.5rem;
+    padding: 0.25em 0.5em;
+
+    color: rgb(7, 29, 52);
+    background-color: rgba(59, 59, 59, 0.598);
+
+    border-radius: 50px;
+}

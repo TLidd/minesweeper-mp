@@ -14,3 +14,7 @@
     border-bottom: none;
     background-color: rgba(119, 136, 153, 0.04);
 }
+
+.game-container.game-over{
+    filter: blur(2px) grayscale(70%);
+}

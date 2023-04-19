@@ -1,22 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import '../../styles/MinesweeperGame/PlayerTimer.css'
+
+import { Dispatch, SetStateAction } from 'react';
 
 interface PlayerTimerProps{
     timeRemaining: number;
     runTimer: boolean;
     isOpponent: boolean;
     lostCallback: () => void;
+    setTimeRemaining: Dispatch<SetStateAction<number>>;
 }
 
-export default function PlayerTimer({timeRemaining, runTimer, isOpponent, lostCallback}: PlayerTimerProps) {
-    let [timeLeft, setTimeLeft] = useState<number>(timeRemaining);
-    let mins: number = Math.floor(timeLeft / 60000);
-    let seconds: number = Number(((timeLeft % 60000) / 1000).toFixed(0));
+export default function PlayerTimer({timeRemaining, runTimer, isOpponent, lostCallback, setTimeRemaining}: PlayerTimerProps) {
+    console.log(timeRemaining);
+    let mins: number = Math.floor(timeRemaining / 60000);
+    let seconds: number = Number(((timeRemaining % 60000) / 1000).toFixed(0));
+    console.log(seconds);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setTimeLeft((prevState) => {
-                if(prevState - 1000 <= 0){
+            setTimeRemaining((prevState) => {
+                if(prevState - 10 <= 0){
                     clearInterval(interval);
                     //if not opponent tell server that player lost.
                     if(!isOpponent){
@@ -24,15 +28,15 @@ export default function PlayerTimer({timeRemaining, runTimer, isOpponent, lostCa
                     }
                     return 0;
                 }
-                if(runTimer) return prevState - 1000;
+                if(runTimer) return prevState - 10;
                 else return prevState;
             });
-        }, 1000)
+        }, 10)
 
         return () => {
             clearInterval(interval);
         }
-    }, [runTimer, isOpponent, lostCallback])
+    }, [runTimer, isOpponent, lostCallback, setTimeRemaining])
 
   return (
     <div id='player-timer'>
