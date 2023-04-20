@@ -30,7 +30,7 @@ io.on('connection', (socket: Socket) => {
     //connects the two players to the lobby and loads the initial board.
     socket.on('lobbyConnect', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
-            if(io.sockets.adapter.rooms.get(gameID).size <= 2){
+            if(io.sockets.adapter.rooms.get(gameID)!.size <= 2){
                 socket.join(gameID);
                 let game = minesweeperGamesList.getGame(gameID);
                 if(game){
@@ -47,7 +47,7 @@ io.on('connection', (socket: Socket) => {
     //readies or unreadies the player and if both players are ready it starts the game.
     socket.on('playerIsReady', (gameID) => {
         if(io.sockets.adapter.rooms.get(gameID)){
-            if(io.sockets.adapter.rooms.get(gameID).size == 2){
+            if(io.sockets.adapter.rooms.get(gameID)!.size == 2){
                 let game = minesweeperGamesList.getGame(gameID);
                 if(game){
                     let playerReady = game.playerReady(socket.id);

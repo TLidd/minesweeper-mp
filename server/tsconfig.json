@@ -1,12 +1,14 @@
 {
     "compilerOptions": {
       "module": "CommonJS",
+      "resolveJsonModule": true,
       "esModuleInterop": true,
       "target": "es6",
       "moduleResolution": "node",
       "sourceMap": true,
       "outDir": "dist"
     },
+    "include": ["./package.json"],
     "lib": ["es2015"],
     "ts-node": {
         "esm": true
